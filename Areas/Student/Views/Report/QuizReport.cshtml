@@ -1,0 +1,1013 @@
+﻿@using System.Text.RegularExpressions;
+@{
+    ViewBag.Title = "QuizReport";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="~/Content/error.css">
+<link rel="stylesheet" type="text/css" href="~/Content/persent-circle.css">
+
+<div class="bg-gray-100 flex-1 p-6 pt-32">
+    <div id="thisisstudentreport" hidden></div>
+    <div class="grid grid-cols-1 w-full ">
+        <div class="topcontent w-auto flex flex-row justify-center bg-gray p-6">
+            <div class=" w-full py-6 w-5/12 flex flex-row">
+                <h1 class="h3 pt-5 w-6/12 text-center">@ViewBag.Quiz.Quiz_Name</h1>
+                @if (ViewBag.Percentage != null)
+                {
+                    <div class="box bg-gray-100">
+                        <div class="percent">
+                            <svg>
+                                <circle cx="70" cy="70" r="70"></circle>
+                                <circle cx="70" cy="70" r="70" class="numb"></circle>
+                            </svg>
+
+                            <div data-persent="@ViewBag.Percentage" id="number">
+                                @ViewBag.Percentage%
+                            </div>
+                        </div>
+                        <div class="loding-text">
+                            <p></p>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-finish-quiz">
+                        You have finished this quiz!!!
+                    </p>
+                }
+
+
+            </div>
+
+            <div class="p-6 w-6/12">
+
+                <div class="pt-5">
+                    <span class="">Student: <b>@ViewBag.Student.Name</b> </span>
+                </div>
+                <div>
+                    <span class="">Done Date: @ViewBag.Quiz.CreatedDate.ToString("dd-MM-yyyy")   </span>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="p-6">
+
+            <!--Report-->
+            <div class="w-full bg-gray p-6 ">
+                <div class="grid grid-cols-1 w-full">
+                    <!--======Multiple Test=======-->
+                    @if (ViewBag.MultipleQuestion.Count != 0)
+                    {
+                        <div id="multiple-test" class="w-full items-center bg-gray p-6 mt-6 border border-black-400 bg-gray-200">
+                            <div class="">
+                                <span class="h6">Multiple Choice</span>
+                            </div>
+                        </div>
+
+
+                        <div class="w-full bg-gray p-6 border border-black-400">
+                            @{
+                                int countMultipleQuestion = 0;
+                            }
+                            @foreach (var question in ViewBag.MultipleQuestion)
+                            {
+                                List<string> answerChoses = new List<string>();
+                                int countChosensAnswer = 0;
+                                int countCorrectAnswer = 0;
+                                bool isCorrect = true;
+                                foreach (var studentAnswer in ViewBag.StudentAnswer)
+                                {
+                                    if (studentAnswer.QuestionDoneID == question.Q_DoneID && studentAnswer.Qtype == question.Qtype)
+                                    {
+                                        countChosensAnswer++;
+                                        if (studentAnswer.IsCorrect == false)
+                                        {
+                                            isCorrect = false;
+                                        }
+                                        answerChoses.Add(studentAnswer.Answer.ToLower());
+                                    }
+                                }
+                                foreach (var answers in question.QuestionAnswerDones)
+                                {
+                                    if (answers.IsCorrect)
+                                    {
+                                        countCorrectAnswer++;
+                                    }
+                                }
+                                if (countChosensAnswer != countCorrectAnswer)
+                                {
+                                    isCorrect = false;
+                                }
+
+                                countMultipleQuestion++;
+                                <div class="w-full items-center bg-gray px-6 pt-2">
+                                    @if (question.ChapterID != null)
+                                    {
+                                        <p>@question.Chapter.Name</p>
+                                    }
+                                    <span class="question-num">Question @countMultipleQuestion: </span> &nbsp;&nbsp;&nbsp;
+                                    @if (isCorrect)
+                                    {
+                                        <span class="mark-text"> (Mark: </span> <span class="mark-total">@question.Mark/@question.Mark)</span><br />
+                                    }
+                                    else
+                                    {
+                                        <span class="mark-text"> (Mark: </span> <span class="mark-total">0/@question.Mark)</span><br />
+                                    }
+
+                                </div>
+                                <div class="w-full items-center bg-gray  ">
+                                    <div>
+                                        <div contenteditable="false" class="w-full bg-gray px-6 pt-2 pb-6 font-sans ">
+                                            <span> @question.Text</span>
+                                        </div>
+                                        @if (question.ImageData != null)
+                                        {
+                                            var base64 = Convert.ToBase64String(question.ImageData);
+                                            var imgSrc = string.Format("data:image/png;base64,{0}", base64);
+                                            <div class="w-full bg-gray px-6 pt-2 pb-6">
+                                                <img src="@imgSrc" class="block ml-auto mr-auto" alt="pic" />
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="w-full items-center bg-gray">
+                                    <table class="w-full border-spacing-2">
+                                        @{
+                                            int countAnswer = 0;
+                                            char countAns = 'A';@*
+                                                List<string> correctAns = new List<string>();*@
+                                            List<string> correctLetter = new List<string>();
+                                        }
+                                        @foreach (var answers in question.QuestionAnswerDones)
+                                        {
+
+                                            countAnswer++;
+                                            if (answers.IsCorrect)
+                                            {
+                                                @*correctAns.Add(answers.Text);*@
+                                                correctLetter.Add(countAns.ToString());
+                                            }
+                                            if (answerChoses == null || !answerChoses.Contains(answers.Text.ToLower()))
+                                            {
+                                                <tr>
+                                                    <td class="w-2">
+                                                        <input type="checkbox" name="cbMultipleOption" value="@answers.QA_DoneID" disabled>
+                                                    </td>
+                                                    <td class="w-2 my-auto">
+                                                        <label>@countAns.</label>
+                                                    </td>
+                                                    <td>
+                                                        <div class="w-full bg-gray-100 pl-3 ">@answers.Text </div>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td class="w-2">
+                                                        <input type="checkbox" name="cbMultipleOption" value="@answers.QA_DoneID" disabled checked>
+                                                    </td>
+                                                    <td class="w-2 my-auto">
+                                                        <label>@countAns.</label>
+                                                    </td>
+                                                    <td>
+
+                                                        @if (isCorrect)
+                                                        {
+                                                            @*<input type="text" style="width:95%" class="w-full pl-3 bg-gray-100 true-answer" name="multipleOption" value="@answers.Text" readonly>*@
+                                                            <div class="w-full bg-gray-100 pl-3 true-answer">@answers.Text </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            @*<input type="text" style="width:95%" class="w-full pl-3 bg-gray-100 false-answer" name="multipleOption" value="@answers.Text" readonly>*@
+                                                            <div class="w-full pl-3 bg-gray-100 false-answer">@answers.Text </div>
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                            }
+                                            countAns++;
+                                        }
+
+                                    </table>
+                                    @if (!isCorrect)
+                                    {
+                                        <div class="w-full items-center bg-gray correct-background">
+                                            <div class="p-0">
+                                                <div contenteditable="false" class=" bg-gray p-4 ">
+                                                    <span class="font-sans">Correct answer: </span>
+                                                    @for (int i = 0; i < correctLetter.Count; i++)
+                                                    {
+                                                        <span class="quest-answer">@correctLetter[i]</span>
+
+                                                        if (i < correctLetter.Count - 1)
+                                                        {
+                                                            <span><b>and</b></span>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                                <br />
+                                if (countMultipleQuestion < ViewBag.MultipleQuestion.Count)
+                                {
+                                    <hr />
+                                }
+                            }
+                        </div>
+                    }
+
+                    <!--=======End Multiple Test=======-->
+                    <!--=======Reading Test========-->
+                    @{ int countReadingQuestion = 0;
+                        int countPassage = 0;
+                    }
+                    @if (ViewBag.ReadingQuestion.Count != 0)
+                    {
+                        <div id="reading-test" class="w-full items-center bg-gray p-6 mt-6 border border-black-400 bg-gray-200">
+                            <div class="">
+                                <span class="h6">Reading</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-gray p-6 border border-black-400">
+                            @foreach (var passage in ViewBag.PassageList)
+                            {
+
+                                countReadingQuestion++;
+                                int countQinside = 0;
+                                countPassage++;
+                                <div class="w-full items-center bg-gray my-6 ">
+                                    @if (passage.ChapterID != null)
+                                    {
+                                        <p>@passage.Chapter.Name</p>
+                                    }
+                                    <span class="question-num">Question @countReadingQuestion: </span> &nbsp;&nbsp;&nbsp;
+                                </div>
+                                <div class="w-full items-center bg-gray  p-2 border border-black-400">
+                                    <div class="w-full items-center bg-gray p-2">
+                                        <span class="h6">Passage</span>
+                                    </div>
+                                    <div class="p-4">
+                                        @if (passage.Text != null && !passage.Text.Equals(""))
+                                        {
+                                            <div>
+                                                <div contenteditable="false" class="w-full items-center bg-gray p-6 font-semibold">
+                                                    @passage.Text
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (passage.PassageImage != null)
+                                        {
+                                            var base64 = Convert.ToBase64String(passage.PassageImage);
+                                            var imgSrc = string.Format("data:image/png;base64,{0}", base64);
+                                            <div class="w-full bg-gray p-6">
+                                                <img src="@imgSrc" class="block ml-auto mr-auto" alt="pic" />
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                                    foreach (var question in ViewBag.ReadingQuestion)
+                                    {
+                                    if (question.PassageID == passage.P_DoneID)
+                                    {
+                                    countQinside++;
+                                    List<string>
+                                        answerChoses = new List<string>
+                                            ();
+                                            int countChosensAnswer = 0;
+                                            int countCorrectAnswer = 0;
+                                            bool isCorrect = true;
+                                            foreach (var studentAnswer in ViewBag.StudentAnswer)
+                                            {
+                                            if (studentAnswer.QuestionDoneID == question.Q_DoneID && studentAnswer.Qtype == question.Qtype)
+                                            {
+                                            countChosensAnswer++;
+                                            if (studentAnswer.IsCorrect == false)
+                                            {
+                                            isCorrect = false;
+                                            }
+                                            answerChoses.Add(studentAnswer.Answer.ToLower());
+                                            }
+                                            }
+                                            foreach (var answers in question.QuestionAnswerDones)
+                                            {
+                                            if (answers.IsCorrect)
+                                            {
+                                            countCorrectAnswer++;
+                                            }
+                                            }
+                                            if (countChosensAnswer != countCorrectAnswer || countChosensAnswer == 0)
+                                            {
+                                            isCorrect = false;
+                                            }
+
+                                            <div>
+                                                <div class="w-full items-center bg-gray px-6 pt-2">
+                                                    <span class="question-num-3"> Q @countReadingQuestion.@countQinside:</span>&nbsp;&nbsp;&nbsp;
+                                                    @if (isCorrect)
+                                                    {
+                                                        <span class="mark-text"> (Mark: </span> <span class="mark-total">@question.Mark/@question.Mark)</span><br />
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="mark-text"> (Mark: </span> <span class="mark-total">0/@question.Mark)</span><br />
+                                                    }
+                                                </div>
+                                                <div class="w-full items-center bg-gray ">
+                                                    <div class="">
+                                                        <div contenteditable="false" class="w-full items-center bg-gray px-6 pt-2 pb-6 font-sans ">
+                                                            <span> @question.Text</span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="w-full items-center bg-gray ">
+                                                    <table class="w-full border-spacing-2">
+                                                        @{
+                                                            int countAnswer = 0;
+                                                            char countAns = 'A';
+                                                            @*List<string> correctAns = new List<string>();*@
+                                                            List<string> correctLetter = new List<string>();
+                                                        }
+                                                        @foreach (var answers in question.QuestionAnswerDones)
+                                                        {
+                                                            countAnswer++;
+                                                            if (answers.IsCorrect)
+                                                            {
+                                                                @*correctAns.Add(answers.Text);*@
+                                                                correctLetter.Add(countAns.ToString());
+                                                            }
+                                                            if (answerChoses == null || !answerChoses.Contains(answers.Text.ToLower()))
+                                                            {
+                                                                <tr>
+                                                                    <td class="w-2">
+                                                                        <input type="checkbox" name="cbMultipleOption" value="@answers.QA_DoneID" disabled>
+                                                                    </td>
+                                                                    <td class="w-2">
+
+                                                                        <label>@countAns.</label>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div class="w-full bg-gray-100 pl-3 ">@answers.Text </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            else
+                                                            {
+                                                                <tr>
+                                                                    <td class="w-2">
+                                                                        <input type="checkbox" name="cbMultipleOption" value="@answers.QA_DoneID" disabled checked>
+                                                                    </td>
+                                                                    <td class="w-2">
+                                                                        <label>@countAns.</label>
+                                                                    </td>
+                                                                    <td>
+                                                                        @if (isCorrect)
+                                                                        {
+                                                                            <div class="w-full bg-gray-100 pl-3 true-answer">@answers.Text </div>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <div class="w-full bg-gray-100 pl-3 false-answer">@answers.Text </div>
+                                                                        }
+
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            countAns++;
+                                                        }
+                                                    </table>
+                                                    @if (!isCorrect)
+                                                    {
+                                                        <div class="w-full items-center bg-gray correct-background" style="margin-bottom:20px">
+                                                            <div class="p-0">
+                                                                <div contenteditable="false" class=" bg-gray p-4 ">
+                                                                    <span class="font-sans">Correct answer: </span>
+                                                                    @for (int i = 0; i < correctLetter.Count; i++)
+                                                                    {
+                                                                        <span class="quest-answer">@correctLetter[i]</span>
+
+                                                                        if (i < correctLetter.Count - 1)
+                                                                        {
+                                                                            <span><b>and</b></span>
+                                                                        }
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            }
+                                            }
+                                            if (countPassage < ViewBag.PassageList.Count)
+                                            {
+                                            <hr />
+                                            }
+                                            }
+                                </div>
+                            }
+
+
+
+                            <!--========End Reading Test==========-->
+                            <!--=======Fill Blank=======-->
+                            @if (ViewBag.FillBlankQuestion.Count != 0 && ViewBag.FillBlankQuestion != null)
+                            {
+                                <div id="fillblank-test" class="w-full items-center bg-gray p-6 mt-6 border border-black-400 bg-gray-200">
+                                    <div class="">
+                                        <span class="h6">Fill Blank</span>
+                                    </div>
+                                </div>
+
+                                <div class="w-full bg-gray p-6 border border-black-400">
+                                    @{
+                                        int countFillBlankQuestion = 0;
+                                    }
+                                    @foreach (var question in ViewBag.FillBlankQuestion)
+                                    {
+                                        List<string> answerChoses = new List<string>();
+                                        List<string> correctAns = new List<string>();
+                                        int countChosensAnswer = 0;
+                                        int countCorrectAnswer = 0;
+                                        bool isCorrect = true;
+                                        foreach (var studentAnswer in ViewBag.StudentAnswer)
+                                        {
+                                            if (studentAnswer.QuestionDoneID == question.Q_DoneID && studentAnswer.Qtype == question.Qtype)
+                                            {
+                                                countChosensAnswer++;
+                                                if (studentAnswer.IsCorrect == false)
+                                                {
+                                                    isCorrect = false;
+                                                }
+                                                answerChoses.Add(studentAnswer.Answer.ToLower());
+                                            }
+                                        }
+                                        foreach (var answers in question.QuestionAnswerDones)
+                                        {
+                                            if (answers.IsCorrect)
+                                            {
+                                                correctAns.Add(answers.Text);
+                                                countCorrectAnswer++;
+                                            }
+                                        }
+                                        if (countChosensAnswer != countCorrectAnswer || countChosensAnswer == 0)
+                                        {
+                                            isCorrect = false;
+                                        }
+                                        countFillBlankQuestion++;
+                                        <div class="w-full items-center bg-gray px-6 pt-2 ">
+                                            @if (question.ChapterID != null)
+                                            {
+                                                <p>@question.Chapter.Name</p>
+                                            }
+                                            <span class="question-num">Question @countFillBlankQuestion:</span>&nbsp;&nbsp;&nbsp;
+                                            @if (isCorrect)
+                                            {
+                                                <span class="mark-text"> (Mark: </span> <span class="mark-total">@question.Mark/@question.Mark)</span><br />
+                                            }
+                                            else
+                                            {
+                                                <span class="mark-text"> (Mark: </span> <span class="mark-total">0/@question.Mark)</span><br />
+                                            }
+                                        </div>
+                                        string[] questionSplit = Regex.Split(question.Text, @"\(.*?\)");
+                                        if (isCorrect)
+                                        {
+                                            <div contenteditable="false" id="fill-content" class="w-full items-center bg-gray px-6 pt-2 pb-6">
+                                                @for (int i = 0; i < questionSplit.Length; i++)
+                                                {
+
+                                                    <span>@questionSplit[i] </span>
+                                                    @* if (answerChoses.Count == 0)
+                                {
+                                    <input type="text" style="width: 15%" name="fillBankNotGivenAnswer" class="fill-input" value="" disabled>
+                                }
+                                else
+                                {*@
+                                                    if (i < questionSplit.Length - 1)
+                                                    {
+                                                        <input type="text" style="width: 15%" name="fillBankNotGivenAnswer" class="true-answer fill-input" value="@answerChoses[i]" disabled>
+                                                    }
+                                                    @* }*@
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+
+                                            <div contenteditable="false" id="fill-content" class="w-full items-center bg-gray p-6 ">
+                                                @for (int i = 0; i < questionSplit.Length; i++)
+                                                {
+                                                    <span>@questionSplit[i]</span>
+                                                    if (i < questionSplit.Length - 1)
+                                                    {
+                                                        if (answerChoses.Count == 0)
+                                                        {
+                                                            <input type="text" style="width: 15%" name="fillBankNotGivenAnswer" class="fill-input" value="" disabled>
+
+                                                            <span class="w-full bg-gray-100 pl-3 fill-input"></span>
+
+                                                        }
+                                                        else
+                                                        {
+                                                            if (!answerChoses[i].Equals("") && answerChoses[i] != null)
+                                                            {
+                                                                <input type="text" style="width: 15% " class="false-answer fill-input" value="@answerChoses[i]" disabled>
+
+                                                            }
+                                                            else
+                                                            {
+                                                                <input type="text" style="width: 15%" class="fill-input" value="@answerChoses[i]" disabled>
+                                                            }
+                                                        }
+                                                    }
+
+                                                }
+                                            </div>
+                                        }
+                                        if (!isCorrect)
+                                        {
+                                            <div class="w-full items-center bg-gray correct-background" style="margin-bottom:20px">
+                                                <div class="p-0">
+                                                    <div contenteditable="false" class=" bg-gray p-4 ">
+                                                        <span class="font-sans">Correct answer: </span>
+                                                        @if (correctAns.Count == 1)
+                                                        {
+                                                            <span class="quest-answer">@correctAns[0] &nbsp;</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            for (int i = 0; i < correctAns.Count; i++)
+                                                            {
+                                                                int no = i + 1;
+                                                                <span>@no-</span> <span class="quest-answer">@correctAns[i] &nbsp;</span>
+
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        if (countFillBlankQuestion < ViewBag.FillBlankQuestion.Count)
+                                        {
+                                            <hr />
+                                        }
+
+                                    }
+
+                                </div>
+
+                            }
+
+                            <!--=======End Fill Blank=======-->
+                            <!--======Short Answer=======-->
+                            @if (ViewBag.ShortAnswerQuestion.Count != 0 && ViewBag.ShortAnswerQuestion != null)
+                            {
+                                <div id="shortans-test" class="w-full items-center bg-gray p-6 mt-6 border border-black-400 bg-gray-200">
+                                    <div class="">
+                                        <span class="h6">Short Answer</span>
+                                    </div>
+                                </div>
+
+                                <div class="w-full bg-gray p-6 border border-black-400">
+                                    @{ int countShortAnsQuestion = 0;
+                                    }
+                                    @foreach (var question in ViewBag.ShortAnswerQuestion)
+                                    {
+                                        string answerChose = "";
+                                        bool isCorrect = false;
+                                        foreach (var studentAnswer in ViewBag.StudentAnswer)
+                                        {
+                                            if (studentAnswer.QuestionDoneID == question.Q_DoneID && studentAnswer.Qtype == question.Qtype)
+                                            {
+                                                isCorrect = studentAnswer.IsCorrect;
+                                                answerChose = studentAnswer.Answer;
+                                            }
+                                        }
+                                        countShortAnsQuestion++;
+                                        <div>
+                                            <div class="w-full items-center bg-gray px-6 pt-2">
+                                                @if (question.ChapterID != null)
+                                                {
+                                                    <p>@question.Chapter.Name</p>
+                                                }
+                                                <span class="question-num">Question @countShortAnsQuestion:</span>&nbsp;&nbsp;&nbsp;
+                                                @if (isCorrect)
+                                                {
+                                                    <span class="mark-text"> (Mark: </span> <span class="mark-total">@question.Mark/@question.Mark)</span><br />
+                                                }
+                                                else
+                                                {
+                                                    <span class="mark-text"> (Mark: </span> <span class="mark-total">0/@question.Mark)</span><br />
+                                                }
+                                            </div>
+                                            <div class="w-full items-center bg-gray ">
+                                                <div>
+                                                    <div class="w-full items-center px-6 pt-2 pb-6 ">
+                                                        <div contenteditable="false" class="w-full items-center bg-gray font-sans">
+                                                            @question.Text
+                                                        </div>
+
+                                                    </div>
+                                                    @if (question.ImageData != null)
+                                                    {
+                                                        var base64 = Convert.ToBase64String(question.ImageData);
+                                                        var imgSrc = string.Format("data:image/png;base64,{0}", base64);
+                                                        <div class="w-full bg-gray px-6 pt-2 pb-6">
+                                                            <img src="@imgSrc" class="block ml-auto mr-auto" alt="pic" />
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            @{
+
+                                                List<string> correctAns = new List<string>();
+                                            }
+                                            @foreach (var answers in question.QuestionAnswerDones)
+                                            {
+                                                if (answers.IsCorrect)
+                                                {
+                                                    string[] ans = answers.Text.Split(new char[] { '\\' });
+                                                    correctAns = ans.ToList();
+                                                }
+                                            }
+                                            <div class="w-full items-center bg-gray ">
+                                                <table class="w-full border-spacing-2">
+                                                    <tr>
+                                                        <td style="width: 130px"><b>Your answers:</b></td>
+                                                        @if (answerChose.Trim().Equals("") || answerChose == null)
+                                                        {
+                                                            <td>
+                                                                @* Answer: &nbsp;*@@*<input type="text" style="width:90%" class="txt w-full pl-3 fill-input" disabled>*@
+                                                                <input type="text" style="width:90%" class="txt w-full pl-3 fill-input" disabled>
+                                                                @*  <span class="w-full bg-gray-100 pl-3 fill-input"></span>*@
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            if (isCorrect)
+                                                            {
+                                                                <td>
+                                                                    @*Answer: &nbsp;<input type="text" style="width:90%" class="txt w-full pl-3 true-answer fill-input" value="@answerChose" disabled>*@
+                                                                    <div class="w-full bg-gray-100 pl-3 true-answer ">@answerChose</div>
+                                                                    @*<span class="w-full bg-gray-100 pl-3 true-answer fill-input">@answerChose</span>*@
+                                                                </td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td>
+                                                                    @* Answer: &nbsp;<input type="text" style="width:90%" class="txt w-full pl-3 false-answer fill-input" value="@answerChose" disabled>
+                                                <span class="w-full bg-gray-100 pl-3 false-answer fill-input">@answerChose</span>*@
+                                                                    <div class="w-full bg-gray-100 pl-3 false-answer ">@answerChose</div>
+                                                                </td>
+                                                            }
+                                                        }
+
+                                                    </tr>
+
+                                                </table>
+                                                <div class="w-full items-center bg-gray correct-background" style="margin-bottom:20px">
+                                                    <div class="p-0">
+                                                        <div contenteditable="false" class=" bg-gray p-4 ">
+                                                            <span class="font-sans">Correct answer: </span>
+                                                            @for (int i = 0; i < correctAns.Count; i++)
+                                                            {
+                                                                <span class="quest-answer">@correctAns[i]</span>
+                                                                if (i < correctAns.Count - 1)
+                                                                {
+                                                                    <span><b>or</b></span>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @if (countShortAnsQuestion < ViewBag.ShortAnswerQuestion.Count)
+                                            {
+                                                <hr />
+                                            }
+                                        </div>
+                                    }
+
+
+                                </div>
+
+                            }
+                            <!--=======End Short Answer=======-->
+                            <!--======Matching=======-->
+                            @if (ViewBag.MatchingQuestion.Count != 0 && ViewBag.MatchingQuestion != null)
+                            {
+                                <div id="matching-test" class="w-full items-center bg-gray p-6 mt-6 border border-black-400 bg-gray-200">
+                                    <div class="">
+                                        <span class="h6">Matching</span>
+                                    </div>
+                                </div>
+
+                                <div class="block border border-black-400 p-6">
+                                    @{ int countMatchQuestion = 0;
+                                    }
+                                    @foreach (var question in ViewBag.MatchingQuestion)
+                                    {
+                                        string answerChose = "";
+                                        List<string> studentSolution = new List<string>();
+                                        bool isCorrect = false;
+                                        foreach (var studentAnswer in ViewBag.StudentAnswer)
+                                        {
+                                            if (studentAnswer.QuestionDoneID == question.M_DoneID && studentAnswer.Qtype == 5)
+                                            {
+                                                isCorrect = studentAnswer.IsCorrect;
+                                                answerChose = studentAnswer.Answer;
+                                            }
+                                        }
+                                        if (answerChose != "")
+                                        {
+                                            studentSolution = answerChose.Split(new char[] { ';' }).ToList();
+                                        }
+                                        countMatchQuestion++;
+                                        <div class="w-full items-center bg-gray p-6 ">
+                                            @if (question.ChapterID != null)
+                                            {
+                                                <p>@question.Chapter.Name</p>
+                                            }
+                                            <span class="question-num">
+                                                Question @countMatchQuestion:
+                                            </span>  &nbsp;&nbsp;&nbsp;
+                                            @if (isCorrect)
+                                            {
+                                                <span class="mark-text"> (Mark: </span> <span class="mark-total">@question.Mark/@question.Mark)</span><br />
+                                            }
+                                            else
+                                            {
+                                                <span class="mark-text"> (Mark: </span> <span class="mark-total">0/@question.Mark)</span><br />
+                                            }
+                                        </div>
+                                        <div class="w-full bg-gray px-6">
+                                            <div class="w-full bg-gray px-6 pt-2 text-center flex items-center justify-center inline-block">
+                                                <div class="w-full">
+                                                    <div class="flex items-center justify-center column-gap inline-block">
+                                                        <div class="grid grid-cols-1 px-2 w-1/12">
+                                                            <span>Solution</span>
+                                                        </div>
+                                                    </div>
+                                                    <ul id="table-matching" class="w-full">
+
+                                                        <li id="matching-option" class="w-full flex">
+                                                            <div class="my-2 w-6/12 px-4">
+                                                                <!--Textarea bên trái-->
+                                                                <textarea id="matching-left" name="name" class="border w-full p-2 border-black-400 bg-blue-200" rows="8" spellcheck="false" readonly>@question.ColumnA</textarea>
+                                                            </div>
+                                                            <!--List input ở giữa-->
+                                                            <div id="table-solution" class="grid grid-cols-1 border border-black-400 mt-2 w-1/12 grid-rows-6">
+                                                                @if (isCorrect)
+                                                                {
+                                                                    foreach (string ans in studentSolution)
+                                                                    {
+                                                                        <input type="text" id="matching-solution" class="text-center true-answer" name="solution" value="@ans" readonly />
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (studentSolution != null)
+                                                                    {
+                                                                        foreach (string ans in studentSolution)
+                                                                        {
+                                                                            <input type="text" id="matching-solution" class="text-center false-answer" name="solution" value="@ans" readonly />
+                                                                        }
+                                                                    }
+                                                                }
+
+
+                                                            </div>
+                                                            <div class="my-2 w-6/12 px-4">
+                                                                <!--Textarea bên phải-->
+                                                                <textarea id="matching-right" class="border w-full p-2 border-black-400 bg-green-200" name="name" rows="8" spellcheck="false" readonly>@question.ColumnB</textarea>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            @if (!isCorrect)
+                                            {
+                                                <div class="w-full items-center bg-gray correct-background" style="margin-bottom:20px">
+                                                    <div class="p-0">
+                                                        <div contenteditable="false" class=" bg-gray p-4 ">
+                                                            <span class="font-sans">Correct answer: </span>
+                                                            @{
+                                                                string[] correctAnswers = question.Solution.Split(new char[] { ';' });
+                                                            }
+                                                            @foreach (string solution in correctAnswers)
+                                                            {
+                                                                string[] numAndLetter = solution.Split(new char[] { '-' });
+                                                                <span>@numAndLetter[0]-</span> <span class="quest-answer">@numAndLetter[1] &nbsp;</span>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            @if (countMatchQuestion < ViewBag.MatchingQuestion.Count)
+                                            {
+                                                <hr />
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            <!--=======End Matching=======-->
+                            <!--=======Indicate Mistake=======-->
+                            @if (ViewBag.IndicateMistakeQuestion.Count != 0 && ViewBag.IndicateMistakeQuestion != null)
+                            {
+                                <div>
+                                    <div id="indicate-test" class="w-full items-center bg-gray p-6 mt-6 border border-black-400 bg-gray-200">
+                                        <span class="h6">Indicate Mistake</span>
+                                    </div>
+                                </div>
+                                <div class="w-full bg-gray p-6 border border-black-400">
+                                    @{ int countIndicateQuestion = 0;
+                                    }
+                                    @foreach (var question in ViewBag.IndicateMistakeQuestion)
+                                    {
+                                        List<string> answerChoses = new List<string>();
+                                        int countChosensAnswer = 0;
+                                        int countCorrectAnswer = 0;
+                                        bool isCorrect = true;
+                                        foreach (var studentAnswer in ViewBag.StudentAnswer)
+                                        {
+                                            if (studentAnswer.QuestionDoneID == question.Q_DoneID && studentAnswer.Qtype == question.Qtype)
+                                            {
+                                                countChosensAnswer++;
+                                                if (studentAnswer.IsCorrect == false)
+                                                {
+                                                    isCorrect = false;
+                                                }
+                                                answerChoses.Add(studentAnswer.Answer.ToLower());
+                                            }
+                                        }
+                                        foreach (var answers in question.QuestionAnswerDones)
+                                        {
+                                            if (answers.IsCorrect)
+                                            {
+                                                countCorrectAnswer++;
+                                            }
+                                        }
+                                        if (countChosensAnswer != countCorrectAnswer)
+                                        {
+                                            isCorrect = false;
+                                        }
+
+                                        countIndicateQuestion++;
+                                        <div class="w-full items-center bg-gray p-6 ">
+                                            @if (question.ChapterID != null)
+                                            {
+                                                <p>@question.Chapter.Name</p>
+                                            }
+                                            <span class="question-num">Question @countIndicateQuestion:</span>&nbsp;&nbsp;&nbsp;
+                                            @if (isCorrect)
+                                            {
+                                                <span class="mark-text"> (Mark: </span> <span class="mark-total">@question.Mark/@question.Mark)</span><br />
+                                            }
+                                            else
+                                            {
+                                                <span class="mark-text"> (Mark: </span> <span class="mark-total">0/@question.Mark)</span><br />
+                                            }
+                                        </div>
+                                        <div class="w-full items-center bg-gray  ">
+                                            <div>
+                                                <div contenteditable="false" id="indicate-content" class="w-full items-center bg-gray px-6 pt-2 pb-6 ">
+                                                    @{
+                                                        string[] questionSplit = Regex.Split(question.Text, @"\(.*?\)");
+                                                        List<string> letterRepresent = new List<string>();
+                                                        List<string> underLineWords = new List<string>();
+                                                        Regex regex = new Regex(@"\(([^()]+)\)*");
+                                                        foreach (Match match in regex.Matches(question.Text))
+                                                        {
+                                                            string ansList = match.Value;
+                                                            string choices = ansList.Trim().Substring(1, ansList.Length - 2);
+                                                            underLineWords.Add(choices);
+                                                        }
+                                                    }
+                                                    @for (int i = 0; i < questionSplit.Length; i++)
+                                                    {
+                                                        <span>@questionSplit[i]</span>
+                                                        if (i < questionSplit.Length - 1)
+                                                        { <u>@underLineWords[i]</u>
+                                                    }
+
+                                                }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-full items-center bg-gray">
+                                            <table class="w-full border-spacing-2">
+                                                @{
+                                                    int countAnswer = 0;
+                                                    char countAns = 'A';
+                                                    List<string> correctAns = new List<string>();
+                                                }
+                                                @foreach (var answers in question.QuestionAnswerDones)
+                                                {
+                                                    if (answers.IsCorrect)
+                                                    {
+                                                        correctAns.Add(countAns.ToString());
+                                                    }
+                                                    countAnswer++;
+                                                    if (answerChoses == null || !answerChoses.Contains(answers.Text.ToLower()))
+                                                    {
+                                                        <tr>
+                                                            @*<td class="w-2">
+                                            <input type="checkbox" name="cbIndicateOption" value="@answers.QA_DoneID" disabled>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="w-full pl-3 bg-gray-100" name="indicateOption" value="@answers.Text" readonly>
+                                        </td>*@
+
+                                                            <td class="w-2">
+                                                                <input type="checkbox" name="cbIndicateOption" value="@answers.QA_DoneID" disabled>
+                                                            </td>
+                                                            <td class="w-2">
+                                                                <label>@countAns.</label>
+                                                            </td>
+                                                            <td>
+                                                                @*<input type="text" class="w-full pl-3 bg-gray-100" name="indicateOption" value="@answers.Text" readonly>*@
+                                                                <span type="text" class="w-full pl-3 bg-gray-100">@answers.Text</span>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr>
+                                                            <td class="w-2">
+                                                                <input type="checkbox" name="cbMultipleOption" value="@answers.QA_DoneID" disabled checked>
+                                                            </td>
+                                                            <td class="w-2">
+                                                                <label>@countAns.</label>
+                                                            </td>
+                                                            <td>
+                                                                @if (isCorrect)
+                                                                {@*
+                                                <input type="text" style="width:95%" class="w-full pl-3 bg-gray-100 true-answer" value="@answers.Text" readonly>*@
+                                                                <div class="w-full pl-3 bg-gray-100 true-answer">@answers.Text</div>
+                                                            }
+                                                            else
+                                                            {@*
+                                            <input type="text" style="width:95%" class="w-full pl-3 bg-gray-100 false-answer" value="@answers.Text" readonly>*@
+                                                            <div class="w-full pl-3 bg-gray-100 false-answer">@answers.Text</div>
+                                                        }
+
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                    countAns++;
+                                                }
+                                            </table>
+                                            @if (!isCorrect)
+                                            {
+                                                <div class="w-full items-center bg-gray correct-background" style="margin-bottom:20px">
+                                                    <div class="p-0">
+                                                        <div contenteditable="false" class=" bg-gray p-4 ">
+                                                            <span class="font-sans">Correct answer: </span>@for (int i = 0; i < correctAns.Count; i++)
+                                                            {
+                                                                <span class="quest-answer">@correctAns[i]</span>
+                                                                if (i < correctAns.Count - 1)
+                                                                {
+                                                                    <span><b>and</b></span>
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        if (countIndicateQuestion < ViewBag.IndicateMistakeQuestion.Count)
+                                        {
+                                            <hr />
+                                        }
+                                    }
+                                </div>
+                            }
+                            <!--=======End Indicate Mistake=======-->
+
+                        </div>
+
+            </div>
+        </div>
+        <!--End Report-->
+    </div>
+
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/validate.js"></script>
+<script src="~/Scripts/circle.js"></script>
+
+

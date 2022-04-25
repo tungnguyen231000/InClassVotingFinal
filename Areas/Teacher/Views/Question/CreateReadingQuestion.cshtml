@@ -1,0 +1,256 @@
+﻿
+@{
+    ViewBag.Title = "CreateReadingQuestion";
+    Layout = "~/Areas/teacher/Views/Shared/_Layout.cshtml";
+}
+
+<div class="bg-gray-100 flex-1 p-6 pt-32">
+    @using (Html.BeginForm("CreateReadingQuestion", "Question", FormMethod.Post, new { enctype = "multipart/form-data", id = "reading-form", autocomplete = "off" }))
+    {
+        <!-- Modal add lo -->
+        <div class="modal fade " id="addLOModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog w-7/12" style="max-width:none">
+                <div class="modal-content relative " style="max-height: 600px;">
+                    <div class="modal-header">
+                        <h5 class="modal-title h5" id="exampleModalLabel">Choose leaning outcome for question</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body overflow-y-scroll mb-20">
+                        @if (ViewBag.LoList != null && ViewBag.LoList.Count != 0)
+                        {
+                            int countLo = 0;
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="w-2" scope="col">No</th>
+                                        <td class="w-2" scope="col"> </td>
+                                        <th class="w-4/12" scope="col">Name</th>
+                                        <th class="w-8/12" scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var lo in ViewBag.LoList)
+                                    {
+                                        countLo++;
+
+                                        <tr>
+                                            <th scope="row">@countLo</th>
+                                            <td><input type="checkbox" class="form-check-input" id="cbLOID" name="lo" value="@lo.LOID"></td>
+                                            <td><label>@lo.LO_Name</label></td>
+                                            <td><label>@lo.LO_Description</label></td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p style="text-align: center; font-size: medium;">There is no learning outcome to choose!!</p>
+                        }
+
+                    </div>
+
+                    <button type="button" style="bottom:17px;right:17px;" class="btn btn-secondary w-24 absolute" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
+
+        <input value="@ViewBag.ChapterID" type="hidden" name="chid" />
+        <div class="grid grid-cols-1 w-full ">
+
+            <div class="w-full items-center bg-gray">
+                <div class="text-center">
+                    <h1 class="h4">
+                        <span>Question Type:</span>
+                        <span>Reading</span>
+                    </h1>
+                </div>
+            </div>
+
+            <div class="w-full items-center bg-gray p-6 border border-black-400">
+                <div>
+                    <span class="h5"><b>Reading Passage:</b> </span>
+                </div>
+                <div class="w-10/12 float-left mt-3 pr-6">
+                    <textarea class="p-2 w-full border border-black-400 q1-preview" name="paragraph" rows="9" id="paragraphReading" placeholder=" ..."></textarea>
+                </div>
+
+                <div class="w-2/12 drag-content float-right">
+                    <div class="drag-area mt-3">
+                        <div><i class="icon fas fa-cloud-upload-alt"></i></div>
+                        <div><h3 class="header">Drag and Drop to Upload File</h3></div>
+                    </div>
+                    <div>
+                        <div>
+                            <input type="file" class="file-input " name="imgfile" accept="image/*" hidden>
+                            <input type="button" class="btn mt-2 mx-auto btn-image" name="imgbtn" value="Choose Image">
+                        </div>
+                        <div class="mt-2">
+                            <input type="button" class="btn delete-img mx-auto" value="Remove Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="table-question-reading">
+                <div id="reading-question" class="w-full items-center bg-gray p-6 border border-black-400">
+                    <div class="ms-error"></div>
+                    <div class="m-2">
+                        <i id="remove-question-reading" class="fas fa-times delete h4 float-right"></i>
+                    </div>
+                    <div>
+                        <span id="reading-note" class="question-num-2" style="margin-right:20px">Question 1:</span>
+                    </div>
+                    <div class="mx-4 mt-2">
+                        <textarea class="p-2 w-full border border-black-400" id="questionReading" name="question" rows="4" placeholder="Question ..."></textarea>
+                    </div>
+                    <div class="mx-4 mt-10">
+                        <span class="font-bold">Answer:</span>
+                    </div>
+                    <table id="table-reading" class="w-full border-spacing-2">
+                        <tr id="reading-option">
+                            <td class="w-2">
+                                <input type="checkbox" id="optionReading-checkbox" name="cboption" value="1">
+                                <input type="hidden" name="cboption" value="0">
+                            </td>
+                            <td> A.&nbsp;&nbsp;<input style="width:95%" id="optionReading-text" type="text" class="w-full pl-3 border border-black-400" name="option" placeholder="...."></td>
+                        </tr>
+                        <tr id="reading-option">
+                            <td class="w-2">
+                                <input type="checkbox" id="optionReading-checkbox" name="cboption" value="1">
+                                <input type="hidden" name="cboption" value="0">
+                            </td>
+                            <td> B.&nbsp;&nbsp;<input style="width:95%" id="optionReading-text" type="text" class="w-full pl-3 border border-black-400" name="option" placeholder="...."></td>
+
+                        </tr>
+                        <tr id="reading-option">
+                            <td class="w-2">
+                                <input type="checkbox" id="optionReading-checkbox" name="cboption" value="1">
+                                <input type="hidden" name="cboption" value="0">
+                            </td>
+                            <td> C.&nbsp;&nbsp;<input style="width:95%" id="optionReading-text" type="text" class="w-full pl-3 border border-black-400" name="option" placeholder="...."></td>
+
+                        </tr>
+                        <tr id="reading-option">
+                            <td class="w-2">
+                                <input type="checkbox" id="optionReading-checkbox" name="cboption" value="1">
+                                <input type="hidden" name="cboption" value="0">
+                            </td>
+                            <td> D.&nbsp;&nbsp;<input style="width:95%" id="optionReading-text" type="text" class="w-full pl-3 border border-black-400" name="option" placeholder="...."></td>
+
+                        </tr>
+                        <tr id="reading-option">
+                            <td class="w-2">
+                                <input type="checkbox" id="optionReading-checkbox" name="cboption" value="1">
+                                <input type="hidden" name="cboption" value="0">
+                            </td>
+                            <td> E.&nbsp;&nbsp;<input style="width:95%" id="optionReading-text" type="text" class="w-full pl-3 border border-black-400" name="option" placeholder="...."></td>
+
+                        </tr>
+                        <tr id="reading-option">
+                            <td class="w-2">
+                                <input type="checkbox" id="optionReading-checkbox" name="cboption" value="1">
+                                <input type="hidden" name="cboption" value="0">
+                            </td>
+                            <td> F.&nbsp;&nbsp;<input style="width:95%" id="optionReading-text" type="text" class="w-full pl-3 border border-black-400" name="option" placeholder="...."></td>
+                        </tr>
+                    </table>
+                    <div class="mx-4 div-margin-20">
+                        <input type="checkbox" class="form-check-input" id="cb-option2" name="mixChoice" value="1" style="margin-top:6px">
+                        <input type="hidden" name="mixChoice" value="0">
+                        <span class="label-mode-4">Shuffle Answer</span>
+                    </div>
+
+                    <div class="flex">
+                        <div class="m-6">
+                            <span class="label-mode-4">Time (second): </span>
+                            <input id="timeReading" class="border border-black-400 pl-1 w-32" min="15" max="3600" step="1" type="number" name="time" placeholder="...">
+                        </div>
+                        <div class="m-6 ">
+                            <span class="label-mode-4">Mark: </span>
+                            <input id="markReading" class="border border-black-400 pl-1 w-32" min="0.5" max="10" step="0.5" type="number" name="mark" placeholder="...">
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="text-center flex flex-wrap items-center justify-center column-gap inline-block mt-4">
+                <input type="button" id="more-question-reading" value="More question" class="btn btn-gray mt-2 w-6/12 border-dashed border-2 " />
+            </div>
+
+            <div class="text-center flex flex-wrap items-center justify-center column-gap inline-block m-6">
+                <a href="#" class="btn btn-bs-info" style="width: fit-content;" data-bs-toggle="modal" data-bs-target="#addLOModal">
+                    <span>
+                        Choose learning outcome
+                    </span>
+                </a>
+            </div>
+
+            <div class="text-center flex flex-wrap items-center justify-center column-gap inline-block mt-4">
+                <!--Thêm Button Preview-->
+                <button type="button" id="previewReading" class="btn mr-6" data-bs-toggle="modal" data-bs-target="#readingPreview">
+                    Preview
+                </button>
+                <input type="submit" class="btn btn-bs-primary w-3/12" name="submit" value="Create Question">
+            </div>
+
+        </div>
+    }
+
+    <!--Thêm Dialog Paper Preview-->
+    <div class="modal fade" id="readingPreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog w-9/12" style="max-width:none" role="document">
+            <div class="modal-content px-5" style="max-height: 600px;overflow-y:scroll">
+                <div class="">
+                    <button type="button" class="close float-right p-3" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h5 class="text-center h5" id="exampleModalLabel">Preview</h5>
+                </div>
+                <div class="w-full items-center bg-gray border border-black-400">
+                    <div class="w-full items-center bg-gray p-2">
+                        <span class="h6" style="color:#3e1111">Passage:</span>
+                    </div>
+                    <div>
+                        <textarea id="paragraphReading-preview" class="w-full bg-gray p-6  q2-preview font-bold" readonly>
+                            </textarea>
+                        <div class="drag-area-preview">
+                        </div>
+                    </div>
+
+                </div>
+                <div id="table-reading-question-preview">
+                    <div id="reading-test-preview">
+                        <div class="w-full items-center bg-gray px-6 font-bold">
+                            <span>Question 1:</span>
+                        </div>
+                        <div class="w-full items-center bg-gray ">
+                            <div class="">
+                                <textarea id="questionReading-preview" class="w-full items-center bg-gray p-6">
+                                </textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="w-full items-center bg-gray ">
+                            <table id="table-reading-preview" class="w-full border-spacing-2">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+@*<script src="~/Scripts/validate.js"></script>*@
+<script src="~/Scripts/dragdropimage.js"></script>

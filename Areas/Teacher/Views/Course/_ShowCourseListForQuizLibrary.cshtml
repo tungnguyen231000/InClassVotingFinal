@@ -1,0 +1,55 @@
+﻿<!-- start sidebar -->
+<div id="sideBar" class="relative flex flex-col flex-wrap bg-white border-r border-gray-300 p-6 flex-none w-64 md:-ml-64 md:fixed md:top-0 md:z-30 md:h-screen md:shadow-xl animated faster">
+
+
+    <!-- sidebar content -->
+    <div class="flex flex-col">
+
+        <!-- sidebar toggle -->
+        <div class="text-right hidden md:block mb-4">
+            <button id="sideBarHideBtn">
+                <i class="fad fa-times-circle"></i>
+            </button>
+        </div>
+        <!-- end sidebar toggle -->
+        <h1 class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+            <i class="fas fa-graduation-cap "></i>
+            <strong style="font-size:initial">My courses</strong>
+        </h1>
+        <!-- end link -->
+
+        <div class="layout-content">
+            @if (ViewBag.CourseCount == 0)
+            {
+                <p style="text-align: center; margin-top: 10%; font-size: larger;">Course list is empty</p>
+            }
+            else
+            {
+                foreach (var course in ViewBag.CourseList)
+                {
+
+                    <!-- end link -->
+                    <div class="layout-content">
+                        <a href="~/Teacher/Quiz/ViewQuizByCourse?cid=@course.CID" style="margin-left:20px" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+                            <i class="fas fa-graduation-cap "></i>
+                            @{
+                                int coutnQuiz = course.Quizs.Count;
+                            }@*
+                            @foreach (var quiz in course.Quizs)
+                            {
+                                coutnQuiz++;
+                            }*@
+                            @course.Name (@coutnQuiz quiz)
+                        </a>
+
+                    </div>
+                }
+            }
+
+        </div>
+
+    </div>
+    <!-- end sidebar content -->
+
+</div>
+<!-- end sidbar -->

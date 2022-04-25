@@ -1,0 +1,277 @@
+﻿
+@{
+    ViewBag.Title = "EditMultipleChoiceQuestion";
+    Layout = "~/Areas/teacher/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="~/Content/drag-and-drop.css">
+<link rel="stylesheet" type="text/css" href="~/Content/error.css">
+
+<div class="bg-gray-100 flex-1 p-6 pt-32">
+    @using (Html.BeginForm("EditMultipleChoiceQuestion", "Question", FormMethod.Post, new { enctype = "multipart/form-data", id = "multiple-form", autocomplete = "off" }))
+    {
+        <!-- Modal add lo -->
+        <div class="modal fade " id="addLOModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog w-7/12" style="max-width:none">
+                <div class="modal-content relative " style="max-height: 600px;">
+                    <div class="modal-header">
+                        <h5 class="modal-title h5" id="exampleModalLabel">Change question's learning outcome</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body overflow-y-scroll mb-20">
+                        @if (ViewBag.LoList != null && ViewBag.LoList.Count != 0)
+                        {
+                            int countLo = 0;
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="w-2" scope="col">No</th>
+                                        <td class="w-2" scope="col"> </td>
+                                        <th class="w-4/12" scope="col">Name</th>
+                                        <th class="w-8/12" scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var lo in ViewBag.LoList)
+                                    {
+                                        bool isExisted = false;
+                                        if (ViewBag.QuestionLO != null)
+                                        {
+                                            foreach (var ql in ViewBag.QuestionLO)
+                                            {
+                                                if (ql.LearningOutcomeID == lo.LOID)
+                                                {
+                                                    isExisted = true;
+                                                }
+                                            }
+                                        }
+
+                                        countLo++;
+
+                                        <tr>
+                                            <th scope="row">@countLo</th>
+                                            @if (isExisted == true)
+                                            {
+
+                                                <td><input type="checkbox" class="form-check-input" id="cbLOID" name="lo" value="@lo.LOID" checked></td>
+                                            }
+                                            else
+                                            {
+                                                <td><input type="checkbox" class="form-check-input" id="cbLOID" name="lo" value="@lo.LOID"></td>
+                                            }
+                                            <td><label>@lo.LO_Name</label></td>
+                                            <td><label>@lo.LO_Description</label></td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p style="text-align: center; font-size: medium;">There is no learning outcome to choose!!</p>
+                        }
+
+                    </div>
+
+                    <button type="button" style="bottom:17px;right:17px;" class="btn btn-secondary w-24 absolute" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
+
+
+        <div class="grid grid-cols-1 w-full ">
+            <div class="w-full items-center bg-gray">
+                <div class="text-center">
+                    <h1 class="h4">
+                        <span>Question Type:</span>
+                        <span>Multiple Choice</span>
+                        <input type="hidden" name="previousUrl" value="@ViewBag.Previous" />
+                        <input type="hidden" name="chid" value="@ViewBag.ChapterID" />
+                        <input type="hidden" name="qid" value="@ViewBag.Question.QID" />
+                    </h1>
+                </div>
+
+            </div>
+
+            <div class="w-full items-center bg-gray p-6 border border-black-400">
+                <div>
+                    <span><b>Question:</b> </span>
+                </div>
+                <div class="w-10/12  float-left mt-3 pr-6">
+                    <textarea class="p-2 w-full border border-black-400 q1-preview" name="questionText" rows="9" id="questionMultiple" placeholder="...">@ViewBag.Question.Text</textarea>
+                </div>
+
+                <div class="w-2/12 drag-content float-right">
+                    <div class="drag-area mt-3">
+                        @if (ViewBag.Question.ImageData != null)
+                        {
+                            var base64 = Convert.ToBase64String(ViewBag.Question.ImageData);
+                            var imgSrc = string.Format("data:image/png;base64,{0}", base64);
+                            <img src="@imgSrc" alt="pic" />
+                            <input name="imageExisted" value="1" type="hidden" />
+                        }
+                        else
+                        {
+                            <div><i class="icon fas fa-cloud-upload-alt"></i></div>
+                            <div><h3 class="header">Drag and Drop to Upload File</h3></div>
+                            <input name="imageExisted" value="0" type="hidden" />
+                        }
+
+                    </div>
+                    <div>
+                        <div>
+                            <input type="file" class="file-input " name="imgfile" accept="image/*" hidden>
+                            <input type="button" class="btn mt-2 mx-auto btn-image" name="imgbtn" value="Choose Image">
+                        </div>
+                        <div class="mt-2">
+                            <input type="button" class="btn delete-img mx-auto" value="Remove Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full items-center bg-gray p-6 border border-black-400">
+                <div>
+                    <span class="font-bold">Answer:</span>
+                </div>
+                <div class="ms-error"></div>
+                <table class="w-full border-spacing-2">
+                    @{
+                        int countAnswer = 0;
+
+                    }
+                    @foreach (var answer in ViewBag.Question.QuestionAnswers)
+                    {
+                        <tr>
+                            @{countAnswer++;}
+                            @if (answer.IsCorrect)
+                            {
+                                <td class="w-2"><input type="checkbox" class="optionReading-checkbox" id="optionMultiple-checkbox" name="cbOption" value="@countAnswer" checked></td>
+                            }
+                            else
+                            {
+                                <td class="w-2"><input type="checkbox" class="optionReading-checkbox" id="optionMultiple-checkbox" name="cbOption" value="@countAnswer"></td>
+                            }
+                            <td>
+                                &nbsp;
+                                @if (countAnswer == 1)
+                                {<label>A.</label>}
+                                else if (countAnswer == 2)
+                                {<label>B.</label>}
+                                else if (countAnswer == 3)
+                                {<label>C.</label>}
+                                else if (countAnswer == 4)
+                                {<label>D.</label>}
+                                else if (countAnswer == 5)
+                                {<label>E.</label>}
+                                else if (countAnswer == 6)
+                                {<label>F.</label>}
+                                &nbsp;<input style="width:95%" type="text" id="optionMultiple-text" class="w-full pl-3 border border-black-400" name="option" value="@answer.Text">
+                            </td>
+                        </tr>
+                    }
+                    @while (countAnswer < 6)
+                    {
+                        <tr>
+                            @{countAnswer++;}
+                            <td class="w-2"><input type="checkbox" class="optionReading-checkbox" id="optionMultiple-checkbox" name="cbOption" value="@countAnswer"></td>
+                            <td>
+                                &nbsp;
+                                @if (countAnswer == 1)
+                                {<label>A.</label>}
+                                else if (countAnswer == 2)
+                                {<label>B.</label>}
+                                else if (countAnswer == 3)
+                                {<label>C.</label>}
+                                else if (countAnswer == 4)
+                                {<label>D.</label>}
+                                else if (countAnswer == 5)
+                                {<label>E.</label>}
+                                else if (countAnswer == 6)
+                                {<label>F.</label>}
+                                &nbsp;<input style="width:95%" type="text" id="optionMultiple-text" class="w-full pl-3 border border-black-400" name="option">
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <div>
+                    @if (ViewBag.Question.MixChoice == true)
+                    {
+                        <input type="checkbox" class="form-check-input" id="cb-option2" name="mixChoice" value="1" checked>
+                    }
+                    else
+                    {
+                        <input type="checkbox" class="form-check-input" id="cb-option2" name="mixChoice" value="1">
+                    }
+
+                    <span class="label-mode-4">Shuffle Answer</span>
+                </div>
+            </div>
+
+            <div class="flex md:mx-16">
+                <div class="m-6  ">
+                    <span class="label-mode-4">Time (second): </span>
+                    <input id="timeMultiple" class="border border-black-400 pl-1 w-32" min="15" max="3600" step="1" type="number" name="time" placeholder="..." value="@ViewBag.Question.Time">
+                </div>
+                <div class="m-6  ">
+                    <span class="label-mode-4">Mark: </span>
+                    <input class="border border-black-400 pl-1 w-32" type="number" min="0.5" max="10" step="0.5" name="mark" placeholder="..." value="@ViewBag.Question.Mark">
+                </div>
+            </div>
+
+            <div class="text-center flex flex-wrap items-center justify-center column-gap inline-block m-6">
+                <a href="#" class="btn btn-bs-info" style="width: fit-content;" data-bs-toggle="modal" data-bs-target="#addLOModal">
+                    <span>
+                        Change learning outcome
+                    </span>
+                </a>
+            </div>
+
+            <div class="text-center flex flex-wrap items-center justify-center column-gap inline-block mt-4">
+                <button type="button" id="previewMultiple" class="btn mr-6" data-bs-toggle="modal" data-bs-target="#multiplePreview">
+                    Preview
+                </button>
+                <input type="submit" class="btn btn-bs-primary w-3/12" name="submit" value="Save Changes">
+            </div>
+
+        </div>
+    }
+
+    <!--Thêm Dialog Paper Preview-->
+    <div class="modal fade" id="multiplePreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog w-9/12" style="max-width:none" role="document">
+            <div class="modal-content " style="max-height: 600px;overflow-y:scroll">
+                <div class="">
+                    <button type="button" class="close float-right p-3" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h5 class="text-center h5" id="exampleModalLabel">Preview</h5>
+                </div>
+                <div id="multiple-test" class="p-5">
+                    <div class="w-full items-center bg-gray  ">
+                        <div>
+                            <textarea id="questionMultiple-preview" class="w-full bg-gray p-6 q2-preview" readonly>
+                            </textarea>
+                            <div class="drag-area-preview">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="w-full items-center bg-gray">
+                        <table id="table-multiple-preview" class="w-full border-spacing-2">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/validate.js"></script>
+<script src="~/Scripts/dragdropimage.js"></script>
+

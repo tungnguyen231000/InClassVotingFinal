@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title In Class Voting</title>
+
+    <script src="~/Scripts/bootstrapjs/popper.min.js"></script>
+    <link href="~/Content/bootstrapcss/bootstrap.min.css" rel="stylesheet">
+    <script src="~/Scripts/bootstrapjs/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/bootstrapjs/bootstrap.min.js"></script>
+    <link rel="shortcut icon" href="~/Content/img/fptlogo.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/v5.12.1/css/pro.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/Layout.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/Style.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/drag-and-drop.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/error.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/PagedList.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/Test.css">
+    @*<link rel="stylesheet" type="text/css" href="~/Content/bootstrap.min.css">*@
+
+    @*  <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+        <script src="~/Scripts/jquery.validate.min.js"></script>*@
+    <meta name="google-signin-client_id" content="816925739984-c3a18qnso09fra877b75gc1h8jgjg4dn.apps.googleusercontent.com">
+
+
+</head>
+<body style="min-width:800px">
+    <!-- start navbar -->
+    <div class="md:fixed md:w-full md:top-0 md:z-20 flex flex-row flex-wrap items-center bg-white p-6 border-b border-gray-300 fixed top-0 left-0 w-full z-50">
+
+        <!-- logo -->
+        <div class="flex-none w-56 flex flex-row items-center">
+            <img src="~/Content/img/fptlogo.jpg" class="w-10 flex-none">
+            <strong class="capitalize ml-1 flex-1 cl-icon">In Class Voting</strong>
+
+            <button id="sliderBtn" class="flex-none text-right text-gray-900 hidden md:block">
+                <i class="fad fa-list-ul"></i>
+            </button>
+        </div>
+        <!-- end logo -->
+        <!-- navbar content toggle -->
+        <button id="navbarToggle" class="hidden md:block md:fixed right-0 mr-6">
+            <i class="fad fa-chevron-double-down"></i>
+        </button>
+        <!-- end navbar content toggle -->
+        <!-- navbar content -->
+        <div id="navbar" class="animated md:hidden md:fixed md:top-0 md:w-full md:left-0 md:mt-16 md:border-t md:border-b md:border-gray-200 md:p-10 md:bg-white flex-1 pl-3 flex flex-row flex-wrap justify-between items-center md:flex-col md:items-center">
+            <!-- left -->
+            <div style="display: flex; width: 53%;">
+                <a href="~/Teacher/Home/Home"><i class="fas fa-home cl-icon"></i> Home</a>
+                <a href="~/Teacher/Question/QuestionBank" style="margin-left: auto;"><i class="fas fa-university cl-icon"></i> Question Bank</a>
+                <a href="~/Teacher/Quiz/QuizLibrary" style="margin-left: auto;"><i class="fas fa-book-open cl-icon"></i> Quiz Library</a>
+                <a href="~/Teacher/Report/ReportHome" style="margin-left: auto;"><i class="fas fa-book cl-icon"></i> Report</a>
+                <a href="~/Teacher/Poll/CreatePoll" style="margin-left: auto;"><i class="fas fa-poll cl-icon"></i> Create Poll</a>
+            </div>
+
+
+            <!-- end left -->
+            <!-- right -->
+            <div class="flex flex-row-reverse items-center">
+
+                <!-- user -->
+                <div class="dropdown-logout relative md:static">
+
+                    <button class="menu-btn focus:outline-none focus:shadow-outline flex flex-wrap items-center">
+                        <div class="w-8 h-8 overflow-hidden rounded-full">
+                            <img class="w-full h-full object-cover" src="@ViewBag.ImageURL">
+                        </div>
+
+                        <div class="ml-2 capitalize flex ">
+                            <h1 class="text-sm text-gray-800 font-semibold m-0 p-0 leading-none">@ViewBag.UserName</h1>
+                            <i class="fad fa-chevron-down ml-2 text-xs leading-none"></i>
+                        </div>
+                    </button>
+
+                    <button class="hidden fixed top-0 left-0 z-10 w-full h-full menu-overflow"></button>
+
+                    <div class="text-gray-500 menu hidden md:mt-10 md:w-full rounded bg-white shadow-md absolute z-20 right-0 w-40 mt-2 py-2 animated faster">
+                        <!-- item -->
+                        <a class="px-4 py-2 block capitalize font-medium text-sm tracking-wide bg-white hover:bg-gray-200 hover:text-gray-900 transition-all duration-300 ease-in-out" href="~/HomeTotal/Logout" onclick="signOut();">
+                            <i class="fad fa-user-times text-xs mr-1"></i>
+                            Log Out
+                        </a>
+                        <!-- end item -->
+
+                    </div>
+                </div>
+                <!-- end user -->
+
+
+            </div>
+            <!-- end right -->
+        </div>
+        <!-- end navbar content -->
+
+    </div>
+    <!-- end navbar -->
+    <!-- strat wrapper -->
+    <div class="h-screen flex flex-row flex-wrap">
+        <!-- strat content -->
+        @RenderBody()
+    </div>
+    <!-- End General Report -->
+    <!-- end wrapper -->
+    <!-- script -->
+    <!--Poll Type Dialog -->
+
+
+
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jqueryui/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script src="~/Scripts/validate.js"></script>
+    <script src="~/Scripts/preview.js"></script>
+    <script src="~/Scripts/more-option.js"></script>
+
+    @*<script src="https://apis.google.com/js/platform.js" async defer></script>*@
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+    <script src="~/Scripts/Layout.js"></script>
+    <script src="~/Scripts/Login.js"></script>
+
+    <!-- end script -->
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+﻿@model IPagedList<InClassVoting.Models.Poll>
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "ReportPollList";
+    Layout = "~/Areas/Teacher/Views/Shared/_ReportLayout.cshtml";
+}
+
+
+<div class="bg-gray-100 flex-1 p-6 md:mt-16">
+    <!-- start navbar -->
+    <!-- end navbar -->
+    <!-- General Report -->
+    @if (ViewBag.CountPoll == 0)
+    {
+        <p style="text-align: center; margin-top: 10%; font-size: larger;">There is no poll report to display</p>
+        <div class="w-full text-center mt-10">
+            <a href="~/Teacher/Poll/CreatePoll" class="w-48 mx-auto btn btn-bs-info">Create a poll here</a>
+        </div>
+    }
+    else
+    {
+        <div class="block-search-dropdown">
+            <div class="search-size text-gray-700 md:w-full md:flex md:flex-row md:justify-evenly md:pb-10 md:mb-10 md:border-b md:border-gray-200">
+
+
+                @using (Html.BeginForm("ReportPollList", "Report", FormMethod.Get))
+                {<div class="">
+                        <span class="h5">Search: </span><input class="search-box flex-1 w-8/12 border border-black-400 txt-report" type="text" name="searchText" placeholder="Search..." value="@ViewBag.Search">
+                        <button type="submit" class="search-box"> <i class="fad fa-search"></i> </button>
+                    </div>
+
+                }
+            </div>
+
+        </div>
+        if (Model.Count() == 0)
+        {
+            <p style="text-align: center; margin-top: 10%; font-size: larger;">0 poll report found!!!</p>
+        }
+        else
+        {
+            <div class="tb-mg-top">
+                <table class="table w-full">
+                    <thead>
+                        <tr>
+                            <th class="w-1/12" scope="col">No</th>
+                            <th class="w-3/12" scope="col">Poll name</th>
+                            <th class="w-2/12" scope="col">Number of participians</th>
+                            <th class="w-3/12" scope="col">Status</th>
+                            <th class="w-3/12" scope="col">Created date</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var poll in Model)
+                        {
+                            ViewBag.PollCount = ViewBag.PollCount + 1;
+                            <tr>
+                                <th scope="row">@ViewBag.PollCount</th>
+                                <td class="w-3/12">
+                                    <a href="~/Teacher/Poll/ShowPollResult?poid=@poll.PollID" type="button">@poll.PollName </a>
+                                </td>
+                                <td class="w-3/12">
+                                    @poll.TotalParticipian
+                                    @if (poll.TotalParticipian >= 2)
+                                    {<span>students</span>}
+                                    else
+                                    {<span>student</span>}
+                                </td>
+                            @if (poll.IsDoing)
+                            {
+                                <td class="w-3/12"><span style="color:blue"><b>Doing</b></span></td>
+                            }
+                            else
+                            {
+                                <td class="w-3/12"><span>Done</span></td>
+                            }
+
+
+                            @{
+                                string date = poll.CreatedDate.ToString("dd-MM-yyyy");
+                            }
+                            <td class="w-3/12">@date</td>
+
+                        </tr>
+                    }
+
+                    </tbody>
+                </table>
+
+                <div class="paging">
+                    @Html.PagedListPager(Model, i => Url.Action("ReportPollList", "Report",
+                new { i, searchText = Request.QueryString["searchText"] }))
+                </div>
+            </div>
+
+
+        }
+    }
+
+</div>
+
+
+

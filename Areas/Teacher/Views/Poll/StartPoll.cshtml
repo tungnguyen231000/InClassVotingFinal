@@ -1,0 +1,150 @@
+﻿
+@{
+    ViewBag.Title = "StartPoll";
+    Layout = "~/Areas/Teacher/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="bg-gray-100 flex-1 p-6 pt-24">
+
+    <div class="grid grid-cols-1 w-full bg-gray p-6  ">
+        <!-- Start Form Poll-->
+        @using (Html.BeginForm("EndPoll", "Poll", FormMethod.Post, new { id = "formPollWaiting" }))
+        {
+            <input type="hidden" name="poid" value="@ViewBag.Poll.PollID" />
+            <div class="w-full items-center bg-gray mx-auto my-3">
+                <div class="text-center">
+                    <h1 class="h3">
+                        <span> @ViewBag.Poll.PollName</span>
+                    </h1>
+                </div>
+            </div>
+
+
+            <div style="display: flex; align-items: center; justify-content: center;" class="mx-auto my-3 w-full">
+                <h1 class="h5 my-auto">Poll link: </h1>
+                <p class="linkquiz-lable mx-3">@ViewBag.PollLink</p>
+                <input type="hidden" id="pollLink" value="@ViewBag.PollLink" />
+                <input type="hidden" name="poid" value="@ViewBag.Poll.PollID" />
+                <a class="btn btn-bs-info" onclick="copyLink()">Copy</a>
+            </div>
+
+            <div class="w-full bg-gray p-6 items-center inline-flex justify-center">
+                @if (ViewBag.CountDown != null)
+                {
+                    <i style="color:burlywood" class="h2 far fa-clock  px-2"></i>
+                    <span class="h2 px-2" style="color:darkred" id="time" name="create-question-time" data-time="@ViewBag.CountDown" placeholder="Time">00:00</span>
+                }
+
+            </div>
+
+            <!--Form Poll-->
+    <div class="border  border-black-400 p-3">
+        <!--<div class="w-full items-center bg-gray p-6 ">
+        <div>
+            <div>
+                <span class="question-num">
+                    Question:
+                </span>
+            </div>
+            <div class="w-full items-center p-6 ">-->
+        @*  <div contenteditable="false" class="w-full bg-gray p-6 font-sans font-semibold">
+            <span>  @ViewBag.Poll.Question</span>
+        </div>*@
+        <!--<div contenteditable="false" class="w-full bg-gray px-6 pt-2 pb-6 font-sans">
+                    <span>  @ViewBag.Poll.Question</span>
+                </div>
+            </div>
+        </div>
+
+    </div>-->
+        <div class=" items-center bg-gray p-6">
+            <div class="w-full items-center bg-gray px-6 pt-6">
+                <span class="question-num">
+                    Question:
+                </span>
+            </div>
+
+            <div class="w-full items-center bg-gray ">
+                <div contenteditable="false" class="w-full bg-gray px-6 pt-2 pb-6 font-sans">
+                    <span>  @ViewBag.Poll.Question</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full items-center bg-gray p-6">
+            @if (ViewBag.Poll.Polltype.Equals("MultipleAnswer"))
+            {
+                <p class="px-6">
+                    (Choose 1 or more answer)
+                </p>
+            }
+            else
+            {
+                <p class="px-6">
+                    (Choose 1 answer)
+                </p>
+            }
+            <table class="w-full border-spacing-2">
+
+                @foreach (var pollChoice in ViewBag.Poll.Poll_Answer)
+                {
+                    <tr>
+                        <td class="w-2">
+                            @if (ViewBag.Poll.Polltype.Equals("MultipleAnswer"))
+                            {
+                                <input type="checkbox" name="option">
+                            }
+                            else
+                            {
+                                <input type="radio" class="mode-rdb2" name="option">
+                            }
+
+                        </td>
+                        <td>
+                            <span type="text" style="width:95%" class="w-full pl-3 bg-gray-100" name="multipleOption">@pollChoice.Answer_Text</span>
+                        </td>
+                    </tr>
+
+                }
+            </table>
+        </div>
+    </div>
+            <!-- End Form Poll-->
+
+            if (ViewBag.Poll.Time == null)
+            {
+
+
+                <div class="flex flex-col justify-center mt-10">
+                    <input type="submit" class="mx-auto btn btn-bs-primary" value="End This Poll" />
+                </div>
+            }
+            else
+            {
+
+
+                <div class="flex flex-col justify-center mt-10">
+                    <input type="submit" class="mx-auto btn btn-bs-primary" value="End This Poll" />
+                </div>
+            }
+
+        }
+
+
+    </div>
+
+</div>
+
+<script src="~/Scripts/teacher.poll.countdown.js"></script>
+<script type="text/javascript">
+
+
+    function copyLink() {
+        var copyText = document.getElementById("pollLink");
+
+        copyText.select();
+        navigator.clipboard.writeText(copyText.value);
+
+    }
+</script>

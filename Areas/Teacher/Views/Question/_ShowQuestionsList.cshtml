@@ -1,0 +1,73 @@
+﻿@model IPagedList<InClassVoting.Models.Question>
+@*@model dynamic*@
+@using PagedList.Mvc;
+@using PagedList;
+
+
+<link rel="stylesheet" type="text/css" href="~/Content/PagedList.css">
+
+
+@if (ViewBag.CountQuest == 0)
+{
+<p style="text-align: center; margin-top: 10%; font-size: larger;">0 Question Found...</p> }
+else
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">No</th>
+            <td scope="col"></td>
+            <th style="width: 47%;" scope="col">Question</th>
+            <th scope="col">Type</th>
+            <th scope="col">Mark</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() != 0) { 
+        
+            foreach (var question in Model)
+            {
+                ViewBag.QuestCount = ViewBag.QuestCount + 1;
+            <tr>
+                <th scope="row">@ViewBag.QuestCount</th>
+                @{ 
+                    string qSet = question.QID + "-" + question.Qtype;
+                }
+                <td><input type="checkbox" name="questionIdAndType" class="form-check-input" id="cbQuestID" value="@qSet"></td>
+                <td><a href="~/Teacher/Question/EditQuestion?qid=@question.QID&&qtype=@question.Qtype" type="button">@question.Text </a> </td>
+                <td>
+                  @if (question.Qtype == 5)
+                  {
+                  <span>Matching</span> }
+                  else
+                  {
+                      @question.QuestionType.Name
+                  }
+                 </td>
+                <td>@question.Mark</td>
+             </tr>
+             }
+         }
+
+    </tbody>
+</table>
+
+<div class="paging">
+    @Html.PagedListPager(Model, i => Url.Action("ShowQuestionsList", "Question",
+         new { i, chid = ViewBag.Chapter.ChID, searchText = Request.QueryString["searchText"], qtype = Request.QueryString["qType"] }),
+        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "divShowQuestions" }))
+
+   
+</div>
+
+<div style="display:flex">
+    <button type="button" class="btn-indigo mg_btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        New Question
+    </button>
+    <button type="submit" style="margin-left:6px" class="btn-indigo">Delete Question</button>
+</div>
+}
+
+
+

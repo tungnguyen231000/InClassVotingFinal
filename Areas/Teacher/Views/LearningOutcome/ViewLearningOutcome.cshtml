@@ -1,0 +1,194 @@
+﻿@model IPagedList<InClassVoting.Models.LearningOutcome>
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "ViewLearningOutcome";
+    Layout = "~/Areas/Teacher/Views/Shared/_QuestionBankLayout.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="~/Content/PagedList.css">
+<link rel="stylesheet" type="text/css" href="~/Content/LO.css">
+<link rel="stylesheet" type="text/css" href="~/Content/error.css">
+
+<div class="bg-gray-100 flex-1 p-6 md:mt-16" style="overflow-x: scroll;">
+    <!-- start navbar -->
+
+    <div style="border-bottom: solid 0.5px">
+        <div class=" mb-3">
+            <div>
+                <h1 class="h5 ">Learning outcome of @ViewBag.Course.Name </h1>
+            </div>
+
+        </div>
+        <div class="flex mb-3">
+            <button type="button" class="btn-indigo mg_btn" data-bs-toggle="modal" data-bs-target="#newLOModal"> New LO</button>
+        </div>
+    </div>
+
+    <!-- end navbar -->
+    <!-- Modal new LO -->
+    @using (Html.BeginForm("CreateLearningOutcome", "LearningOutcome", FormMethod.Post, new { id = "form-create-lo" }))
+    {
+        <div class="modal fade" id="newLOModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-gray-100">
+                    <div class="modal-header">
+                        <h5 class="modal-title h5" id="exampleModalLabel">Create new learning outcome</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="margin-bottom:10px">
+                            <h1 class="lo-label">Name </h1>
+                            <input class="txt-modal-newLO px-2" type="text" id="newLoNameCreate" name="loName" />
+                        </div>
+                      
+                        <h1 class="lo-label-2">Description </h1>
+                        <textarea class="txt-modal-newLO area-lo-detail px-2" rows="4" cols="60" type="text" id="createLoDes" name="loDes"></textarea>
+
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="newLoCId" name="cid" value="@ViewBag.Course.CID" />
+                        <button type="submit" id="createLO" class="btn btn-primary">Create</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <!-- End Modal -->
+    <!-- Modal edit LO -->
+    @using (Html.BeginForm("EditLearningOutcome", "LearningOutcome", FormMethod.Post, new { id = "form-edit-lo" }))
+    {
+        <div class="modal fade" id="editLOModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-gray-100">
+                    <div class="modal-header">
+                        <h5 class="modal-title h5" id="exampleModalLabel">Edit learning outcome</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h1 class="lo-label">Name</h1>
+                        <input class="txt-modal-newLO px-2" type="text" name="newLoName" id="loNameToUpdate" />
+                        <h1 class="lo-label-2">Description</h1>
+                        <textarea class="txt-modal-newLO area-lo-detail px-2" rows="4" cols="60" type="text" name="newLoDes" id="loDesToUpdate"></textarea>
+
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="cid" id="loCIdToUpdare" value="@ViewBag.Course.CID" />
+                        <input type="hidden" name="loid" id="loIdToUpdate" />
+                        <button type="submit"  id="editLO" class="btn btn-primary">Save changes</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    <!-- End Modal -->
+    <!-- Modal confirm delete LO -->
+    <div class="modal fade" id="confirmDeleteLoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h5" id="exampleModalLabel">Delete learning outcome</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 class="color-txt-confirm">You will delete all learning outcome which are selected</h4>
+                    <h4 class="color-txt-confirm">Do you wish to continue?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="submitDeleteForm()">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
+    @if (ViewBag.CountLO == 0)
+    {
+        <p style="text-align: center; margin-top: 10%; font-size: larger;">There is no learning outcome in this course</p>
+    }
+    else
+    {
+        using (Html.BeginForm("ViewLearningOutcome", "LearningOutcome", FormMethod.Get))
+        {
+            <div class="block-search-dropdown mt-3">
+                <div class="search-size text-gray-700 md:w-full md:flex md:flex-row md:justify-evenly md:pb-10 md:mb-10 md:border-b md:border-gray-200">
+                    <div class="mr-2 transition duration-500 ">
+                        <input type="hidden" name="cid" value="@ViewBag.Course.CID" />
+                        @* Search: <input class="search-box flex-1 border border-black-400" type="text" name="searchText" placeholder="..." value="@ViewBag.Search">*@
+                        <span class="h5 my-auto mr-2">Search: </span>
+                        <input class="search-box flex-1 w-10/12 border border-black-400" type="text" placeholder="Search..." name="searchText" value="@ViewBag.Search">
+
+                        <button type="submit" class="search-box">
+                            <i class="fad fa-search"></i>
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+        }
+
+        if (Model.Count() == 0)
+        {
+            <p style="text-align: center; margin-top: 10%; font-size: larger;">0 learning outcome found...</p> }
+        else
+        {
+            <div class="tb-mg-top">
+                @using (Html.BeginForm("DeleteLearningOutcome", "LearningOutcome", FormMethod.Post, new { id = "formDeleteLO" }))
+                {
+                    <table class="table  w-full">
+                        <thead>
+                            <tr>
+                                <th class="w-2" scope="col">No</th>
+                                <td class="w-2" scope="col"> </td>
+                                <th class="w-4/12" scope="col">Name</th>
+                                <th class="w-6/12" scope="col">Description</th>
+                                <th class="w-1/12" scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var lo in Model)
+                            {
+                                ViewBag.LONo++;
+                                <tr >
+                                    <th class="w-2" scope="row">@ViewBag.LONo</th>
+                                    <td><input type="checkbox" class="form-check-input" id="cbLOID" name="loid" value="@lo.LOID"></td>
+                                    <td class="w-4/12" scope="row"><label style="max-width: 1063px; overflow: hidden; text-overflow: ellipsis;">@lo.LO_Name</label></td>
+                                    <td class="w-6/12" style="max-width: 1090px;" scope="row"><label style="max-width: 1063px; overflow: hidden; text-overflow: ellipsis;">@lo.LO_Description</label></td>
+                                    <td class="w-1/12" scope="row">
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#editLOModal" onclick="updateLO(@lo.LOID, '@lo.LO_Name', '@lo.LO_Description')">
+                                            <i class="fas fa-pencil-alt "></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="paging">
+                        @Html.PagedListPager(Model, i => Url.Action("ViewLearningOutcome", "LearningOutcome",
+                                        new { i, cid = ViewBag.Course.CID, searchText = Request.QueryString["searchText"] }))
+                    </div>
+
+                    <div class="flex flex-col block-btn">
+
+                        <input type="hidden" value="@ViewBag.Search" name="searchText" />
+                        <input type="hidden" value="@ViewBag.Course.CID" name="cid" />
+                        <input type="hidden" value="@ViewBag.Page" name="page" />
+                        <button type="button" class="btn btn-indigo mg_btn w-56" id="deleteLOID" data-bs-toggle="modal" data-bs-target="#confirmDeleteLoModal">Delete learning outcome</button>
+                    </div>
+                }
+            </div>
+
+        }
+
+    }
+    @*<p style="text-align: center; margin-top: 10%; font-size: larger;">There is no Question...</p>*@
+
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/teacher.lo.js"></script>
+<script src="~/Scripts/validate2.js"></script>

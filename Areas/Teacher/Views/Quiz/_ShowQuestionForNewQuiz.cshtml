@@ -1,0 +1,85 @@
+﻿@model IPagedList<InClassVoting.Models.Question>
+@using PagedList.Mvc;
+@using PagedList;
+
+<div class="modal-body-add">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="" scope="col">No</th>
+                <td class="" scope="col"> </td>
+                <th class="w-5/12" scope="col">Question</th>
+                <th class="w-2/12" scope="col">Type</th>
+                <th class="w-2/12" scope="col">Mark</th>
+                <th class="w-2/12" scope="col">Learning outcome</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ int countQuestion = 0; }
+
+            @if (ViewBag.Questions != null)
+            {
+                foreach (var question in ViewBag.Questions)
+                {
+                    countQuestion++;
+                    <tr>
+                        <th scope="row">@countQuestion</th>
+                        @{ string idAndType = question.QID + "-" + question.Qtype; }
+                        <td><input type="checkbox" class="form-check-input" id="exampleCheck1" name="qIDAndType" value="@idAndType"></td>
+                        <td class="w-5/12">
+                            @if (question.Text != null && !question.Text.Equals(""))
+                            {
+                                <a href="#" type="button" class="text_overflow">@question.Text</a>}
+                            @if (question.ImageData != null)
+                            {
+                                var base64 = Convert.ToBase64String(question.ImageData);
+                                var imgSrc = string.Format("data:image/png;base64,{0}", base64);
+                                <a href="~/Teacher/Question/EditQuestion?qid=@question.QID&&qtype=@question.Qtype" type="button">
+                                    <img src="@imgSrc" alt="pic" class="img-fix" />
+                                </a>
+                            }
+                        </td>
+                        <td class="w-2/12">
+                            @if (question.Qtype == 5)
+                            {
+                                <span>Matching</span> }
+                            else if (question.Qtype == 2)
+                            {
+                                <span>Reading</span> }
+                            else
+                            {
+                                @question.QuestionType.Name}
+                        </td>
+                        <td class="w-2/12">@question.Mark</td>
+                        @{
+                            string loList = "";
+                            foreach (var ql in ViewBag.LoList)
+                            {
+                                if (ql.QuestionID == question.QID && ql.Qtype == question.Qtype)
+                                {
+                                    string loName = "";
+                                    if (ql.LearningOutcome.LO_Name.Length > 10)
+                                    {
+                                        loName = ql.LearningOutcome.LO_Name.Substring(0, 9) + "...";
+                                    }
+                                    else
+                                    {
+                                        loName = ql.LearningOutcome.LO_Name;
+                                    }
+                                    loList = loList + loName + ", ";
+                                }
+                            }
+                            if (loList != "")
+                            {
+                                loList = loList.Substring(0, loList.Length - 2);
+                            }
+                        }
+
+                        <td class="w-2/12">@loList </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</div>

@@ -1,0 +1,395 @@
+﻿<!-- start sidebar -->
+<div id="sideBar" class="relative flex flex-col flex-wrap bg-white border-r border-gray-300 p-6 flex-none  animated faster" style="max-width:280px;">
+
+
+    <!-- sidebar content -->
+    <div class="flex flex-col" style="max-width:230px;">
+
+        <!-- sidebar toggle -->
+        <div class="text-right hidden md:block mb-4">
+            <button id="sideBarHideBtn">
+                <i class="fad fa-times-circle"></i>
+            </button>
+        </div>
+        <!-- end sidebar toggle -->
+        <!-- button -->
+        <a href="#" style="background-color:aquamarine" class="btn " data-bs-toggle="modal" data-bs-target="#newCourceModal"> Create new course</a>
+        <!-- end button -->
+        <div class="modal fade" id="newCourceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            @using (Html.BeginForm("CreateCourse", "Course", FormMethod.Post, new { id = "form-create-course" }))
+            {
+                <!-- Modal new Cource -->
+
+                <div class="modal-dialog">
+                    <div class="modal-content bg-gray-100">
+                        <div class="modal-header">
+                            <h5 class="modal-title h5" id="exampleModalLabel">Create new course</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h1 class="pop-up-content-title">Enter course name</h1>
+                            <div style="margin-bottom:25px">
+                                <!-- ô này nhập text này-->
+                                <input type="text" id="fname" name="newcourseName" class="pop-up-input px-2" placeholder="Enter here..">
+                                <input type="hidden" name="chid" value="-1">
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" id="createCourse" class="btn btn-primary">Create</button>
+                        </div>
+                    </div>
+                </div>
+
+            }
+        </div>
+        <!-- End Modal -->
+        <!-- Modal new Chapter -->
+        @using (Html.BeginForm("CreateChapter", "Chapter", FormMethod.Post, new { id = "form-create-chapter" }))
+        {
+            <div class="modal fade" id="newChapterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content bg-gray-100">
+                        <div class="modal-header">
+                            <h5 class="modal-title h5" id="exampleModalLabel">Create new chapter</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h1 class="pop-up-content-title">Enter chapter name</h1>
+                            <div style="margin-bottom:25px">
+                                <input type="hidden" id="newChapCID" name="newChapCID" />
+                                <input type="text" id="createChapterName" name="chapterName" class="pop-up-input px-2" placeholder="Enter Here..">
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" id="createChapter" class="btn btn-primary">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <!-- End Modal -->
+        <!-- Modal Edit Course -->
+        @using (Html.BeginForm("EditCourse", "Course", FormMethod.Post, new { id = "form-edit-course" }))
+        {
+            <div class="modal fade" id="editCourseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content bg-gray-100">
+                        <div class="modal-header">
+                            <h5 class="modal-title h5" id="exampleModalLabel">Edit course</h5>&nbsp;
+                            <h5 class="modal-title h5" id="courseNameUpdate"> </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h1 class="pop-up-content-title">Enter new course name</h1>
+                            <div style="margin-bottom:25px">
+                                <input type="text" id="newCourseName" name="newCourseName" class="pop-up-input px-2">
+                                <input type="hidden" id="cIdToUpdate" name="courseIdUpdate">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" id="editCourse" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <!-- End Modal -->
+        <!-- Modal Confirm Delete Course -->
+        @using (Html.BeginForm("DeleteCourse", "Course", FormMethod.Post))
+        {
+            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title h5" id="exampleModalLabel">Delete course</h5> &nbsp;
+                            <h5 class="modal-title h5" id="courseNameDelete"> </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p style="color:red"> You will delete all chapters and question inside this course!!!</p>
+                            <p style="color:red">
+                                Do you wish to continue?
+                            </p>
+                            <input type="hidden" id="cIdToDelete" name="courseIdDelete">
+                            <input type="hidden" name="chid" value="-1" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Yes</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <!-- End Modal -->
+        <!-- link -->
+        <a style="margin-top:10px" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
+
+            <strong style="font-size:initial"><i class="fas fa-graduation-cap"></i>My courses</strong>
+        </a>
+        <!-- end link -->
+
+        <div class="layout-content">
+            @if (ViewBag.CourseCount == 0)
+            {
+                <p style="text-align: center; margin-top: 10%; font-size: larger;">Course list is empty</p>
+            }
+            else
+            {
+                foreach (var course in ViewBag.CourseList)
+                {
+
+                    <div style="display:flex" class="mx-2">
+                        @if (ViewBag.SelectedCourse != null)
+                        {
+                            if (course.CID == ViewBag.SelectedCourse)
+                            {
+                                <details open id="dropDownCourse">
+                                    <summary>
+                                        <span class="mb-1 capitalize" style="color:rebeccapurple"><b>@course.Name</b></span>
+                                        @{
+                                            int countChap = 0;
+                                        }
+                                        @foreach (var chapter in course.Chapters)
+                                        {
+                                            if (chapter.CourseID == course.CID)
+                                            {
+                                                countChap++;
+                                            }
+                                        }
+                                        @if (countChap < 2)
+                                        {
+                                            <p style="color: cornflowerblue"><b>(@countChap chapter)</b></p>
+                                        }
+                                        else
+                                        {
+                                            <p style="color: cornflowerblue"><b>(@countChap chapters)</b></p>
+                                        }
+                                        <i class="ph-caret-down-bold"></i>
+                                    </summary>
+                                    <div class="pl-6">
+                                        @foreach (var chapter in ViewBag.ChapterList)
+                                        {
+                                            //get chapter inside course
+                                            if (chapter.CourseID == course.CID)
+                                            {
+                                                int countQuest = 0;
+                                                foreach (var question in chapter.Questions)
+                                                {
+                                                    if (question.Qtype != 2)
+                                                    {
+                                                        countQuest++;
+                                                    }
+
+                                                }
+
+                                                countQuest = countQuest + chapter.MatchQuestions.Count + chapter.Passages.Count;
+                                                //if this selected chapter is not null
+                                                if (ViewBag.SelectedChapter != null)
+                                                {
+                                                    //if the chapter is selected
+                                                    if (chapter.ChID == ViewBag.SelectedChapter)
+                                                    {
+                                                        if (countQuest < 2)
+                                                        {
+                                                            <a href="~/Teacher/Question/ViewQuestionByChapter?chid=@chapter.ChID&qtype=-1&searchText="><span style="color: rebeccapurple"><b>@chapter.Name</b> </span> <br /> </a>
+                                                            <p style="color: cornflowerblue; width: max-content"><b>(@countQuest question)</b></p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="~/Teacher/Question/ViewQuestionByChapter?chid=@chapter.ChID&qtype=-1&searchText="><span style="color: rebeccapurple"> <b>@chapter.Name</b></span>  <br />  </a>
+                                                            <p style="color: cornflowerblue; width: max-content "> <b>(@countQuest questions)</b></p>
+                                                        }
+
+
+                                                    }
+                                                    else
+                                                    {
+                                                        if (countQuest < 2)
+                                                        {
+                                                            <a href="~/Teacher/Question/ViewQuestionByChapter?chid=@chapter.ChID&qtype=-1&searchText="> @chapter.Name <br /> </a>
+                                                            <p style="color: cornflowerblue; width: max-content;">(@countQuest question)</p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="~/Teacher/Question/ViewQuestionByChapter?chid=@chapter.ChID&qtype=-1&searchText="> @chapter.Name <br />  </a>
+                                                            <p style="color: cornflowerblue; width: max-content;"> (@countQuest questions)</p>
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (countQuest < 2)
+                                                    {
+                                                        <a class="text_overflow" href="~/Teacher/Question/ViewQuestionByChapter?chid=@chapter.ChID&qtype=-1&searchText="> @chapter.Name <br /> </a>
+                                                        <p style="color: cornflowerblue; width: max-content;">(@countQuest question)</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="text_overflow" href="~/Teacher/Question/ViewQuestionByChapter?chid=@chapter.ChID&qtype=-1&searchText="> @chapter.Name <br />  </a>
+                                                        <p style="color: cornflowerblue; width: max-content;"> (@countQuest questions)</p>
+                                                    }
+                                                }
+
+                                            }
+
+                                        }
+                                        <button data-bs-toggle="modal" data-bs-target="#newChapterModal" style="color: darkgray; width: max-content;" onclick="getCourseId(@course.CID)">
+                                            + New chapter
+                                        </button>
+                                    </div>
+
+                                </details>
+                            }
+                            else
+                            {
+                                <details close id="dropDownCourse">
+                                    <summary>
+                                        <span class="mb-1 capitalize ">@course.Name</span>
+                                        @{
+                                            int countChap = course.Chapters.Count;
+                                        }
+                                        @*@foreach (var chapter in course.Chapters)
+                                            {
+                                                if (chapter.CourseID == course.CID)
+                                                {
+                                                    countChap++;
+                                                }
+                                            }*@
+                                        @if (countChap < 2)
+                                        {
+                                            <p style="color: cornflowerblue ">(@countChap Chapter)</p>
+                                        }
+                                        else
+                                        {
+                                            <p style="color: cornflowerblue ">(@countChap Chapters)</p>
+                                        }
+
+                                        <i class="ph-caret-down-bold"></i>
+                                    </summary>
+                                    <div class="pl-6">
+                                        @foreach (var chapter in ViewBag.ChapterList)
+                                        {
+                                            if (chapter.CourseID == course.CID)
+                                            {
+                                                int countQuest = 0;
+                                                foreach (var question in chapter.Questions)
+                                                {
+                                                    if (question.Qtype != 2)
+                                                    {
+                                                        countQuest++;
+                                                    }
+
+                                                }
+
+                                                countQuest = countQuest + chapter.MatchQuestions.Count + chapter.Passages.Count;
+                                                if (countQuest < 2)
+                                                {
+                                                    <a href="~/Teacher/Question/ViewQuestionByChapter?chid=@chapter.ChID&qtype=-1&searchText="> @chapter.Name <br /> </a>
+                                                    <p style="color: cornflowerblue; width: max-content;">(@countQuest Question)</p>
+                                                }
+                                                else
+                                                {
+                                                    <a href="~/Teacher/Question/ViewQuestionByChapter?chid=@chapter.ChID&qtype=-1&searchText="> @chapter.Name <br />  </a>
+                                                    <p style="color: cornflowerblue; width: max-content;"> (@countQuest Questions)</p>
+                                                }
+                                            }
+
+                                        }
+                                        <button data-bs-toggle="modal" data-bs-target="#newChapterModal" style="color: darkgray; width: max-content;" onclick="getCourseId(@course.CID)">
+                                            + New Chapter
+                                        </button>
+                                    </div>
+                                </details>
+                            }
+                        }
+                        else
+                        {
+                            <details close id="dropDownCourse">
+                                <summary>
+                                    <span class="mb-1 capitalize ">@course.Name </span>
+                                    @{
+                                        int countChap = 0;
+                                    }
+                                    @foreach (var chapter in course.Chapters)
+                                    {
+                                        if (chapter.CourseID == course.CID)
+                                        {
+                                            countChap++;
+                                        }
+                                    }
+                                    @if (countChap < 2)
+                                    {
+                                        <p style="color: cornflowerblue ">(@countChap Chapter)</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="color: cornflowerblue ">(@countChap Chapters)</p>
+                                    }
+                                    <i class="ph-caret-down-bold"></i>
+                                </summary>
+                                <div class="layout-cource">
+                                    @foreach (var chapter in ViewBag.ChapterList)
+                                    {
+                                        if (chapter.CourseID == course.CID)
+                                        {
+                                            int countQuest = 0;
+                                            foreach (var question in chapter.Questions)
+                                            {
+                                                if (question.Qtype != 2)
+                                                {
+                                                    countQuest++;
+                                                }
+
+                                            }
+
+                                            countQuest = countQuest + chapter.MatchQuestions.Count + chapter.Passages.Count;
+                                            if (countQuest < 2)
+                                            {
+                                                <a href="~/Teacher/Question/ViewQuestionByChapter?chid=@chapter.ChID&qtype=-1&searchText="> @chapter.Name <br /> </a>
+                                                <p style="color: cornflowerblue; width: max-content;">(@countQuest Question)</p>
+                                            }
+                                            else
+                                            {
+                                                <a href="~/Teacher/Question/ViewQuestionByChapter?chid=@chapter.ChID&qtype=-1&searchText="> @chapter.Name <br />  </a>
+                                                <p style="color: cornflowerblue; width: max-content;"> (@countQuest Questions)</p>
+                                            }
+                                        }
+
+                                    }
+                                    <button data-bs-toggle="modal" data-bs-target="#newChapterModal" style="color: darkgray; width: max-content;" onclick="getCourseId(@course.CID)">
+                                        + New Chapter
+                                    </button>
+                                </div>
+
+                            </details>
+                        }
+
+                        <div style="margin-left: auto; height: fit-content;" class="dropdown">
+                            <button id="dropdownMenuEdit" data-bs-toggle="dropdown"><i class="fas fa-edit"></i></button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuEdit">
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editCourseModal" onclick="getCourseIdToUpdate(@course.CID,'@course.Name')">Rename</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" onclick="getCourseIdToDelete(@course.CID,'@course.Name')">Delete</a></li>
+                                <li><a href="~/Teacher/LearningOutcome/ViewLearningOutcome?cid=@course.CID" class="dropdown-item">View learning outcome</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+
+    </div>
+    <!-- end sidebar content -->
+
+</div>
+<!-- end sidbar -->
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/teacher.course.js"></script>
+<script src="~/Scripts/teacher.chapter.js"></script>
+<script src="~/Scripts/validate2.js"></script>
+<script src="~/Scripts/bootstrapjs/bootstrap.bundle.min.js"></script>

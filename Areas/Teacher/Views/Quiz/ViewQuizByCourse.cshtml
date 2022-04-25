@@ -1,0 +1,162 @@
+﻿@model IPagedList<InClassVoting.Models.Quiz>
+@using PagedList.Mvc;
+@using PagedList;
+<link rel="stylesheet" type="text/css" href="~/Content/PagedList.css">
+
+@{
+    ViewBag.Title = "ViewQuizByCourse";
+    Layout = "~/Areas/teacher/Views/Shared/_QuizLibraryLayout.cshtml";
+}
+
+<div class="bg-gray-100 flex-1 p-6 md:mt-16">
+    <!-- start navbar -->
+
+    <div class="pb-3" style="border-bottom: solid 0.5px;margin-bottom:10px ">
+        <div class="flex my-3">
+            <h1 class="h5 mg-top">@ViewBag.Course.Name</h1>
+        </div>
+        <!-- Example single danger button -->
+        @using (Html.BeginForm("CreateNewQuiz", "Quiz", FormMethod.Get))
+        {
+            <input type="hidden" name="tempName" value="">
+            <input type="hidden" id="cid" name="cid" value="@ViewBag.Course.CID" />
+            <input type="hidden" name="questions" />
+            <button type="submit" class="btn-indigo mg_btn">
+                New Quiz
+            </button>
+        }
+
+    </div>
+    <!-- end navbar -->
+    <!-- General Report -->
+    @if (ViewBag.CoutnQuiz == 0)
+    {
+        <p style="text-align: center; margin-top: 10%; font-size: larger;">There is no quiz in this course</p>
+    }
+    else
+    {
+        <div class="block-search-dropdown">
+            <div class="search-size text-gray-700 md:w-full md:flex md:flex-row md:justify-evenly md:pb-10 md:mb-10 md:border-b md:border-gray-200">
+                <div class="w-full">
+                    @using (Html.BeginForm("ViewQuizByCourse", "Quiz", FormMethod.Get))
+                    {
+                        <input type="hidden" value="@ViewBag.Course.CID" name="cid" />
+                        <span class="h5">Search: </span>
+                        <input class="search-box flex-1 w-10/12 border border-black-400" type="text" placeholder="Search..." name="searchText" value="@ViewBag.Search">
+
+                        <button type="submit" class="search-box" onclick="reloadQuizList()"> <i class="fad fa-search"></i> </button>
+                    }
+                </div>
+            </div>
+        </div>
+
+
+        <div class="tb-mg-top" id="divShowQuizList">
+            @if (Model.Count() == 0)
+            {
+                <p style="text-align: center; margin-top: 10%; font-size: larger;">0 quiz found...</p>
+            }
+            else
+            {
+
+                <table class="table w-full">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th class="w-5/12" style="width: 30%;" scope="col">Quiz Name</th>
+                            <th class="w-2/12" scope="col">Total Mark</th>
+                            <th class="w-2/12" scope="col">Time</th>
+                            <th class="w-3/12" scope="col">Status</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var quiz in Model)
+                        {
+                            ViewBag.QuizCount = ViewBag.QuizCount + 1;
+                            <tr>
+                                <th scope="row">@ViewBag.QuizCount</th>
+                                <td class="w-5/12"><a href="~/Teacher/Quiz/QuizDetail?qzId=@quiz.QuizID" type="button">@quiz.QuizName ( @quiz.NumOfQuestion Questions)</a></td>
+                                <td class="w-2/12">@quiz.Mark</td>
+                                @{
+                                    string time = "";
+                                    int quizTime = quiz.Time;
+                                    if (quiz.Time >= 60)
+                                    {
+
+                                        int minute = quizTime / 60;
+                                        if (minute >= 10)
+                                        {
+                                            time = time + minute.ToString() + ":";
+                                        }
+                                        else
+                                        {
+                                            time = time + "0" + minute.ToString() + ":";
+                                        }
+                                        if (quiz.Time - minute * 60 < 10)
+                                        {
+                                            time = time + "0" + (quiz.Time - minute * 60).ToString();
+                                        }
+                                        else
+                                        {
+                                            time = time + (quiz.Time - minute * 60).ToString();
+                                        }
+
+
+                                    }
+                                    else
+                                    {
+                                        if (quiz.Time < 10)
+                                        {
+                                            time = time + "00:" + "0" + quiz.Time.ToString();
+                                        }
+                                        else
+                                        {
+                                            time = time + "00:" + quiz.Time.ToString();
+                                        }
+
+                                    }
+
+
+                                }
+                                <td class="w-2/12">@time</td>
+                                
+                               
+                                <td class="w-3/12">
+                                    @if (quiz.Status.Equals("Doing"))
+                                    {<span style="color:blue"><b>@quiz.Status</b></span>}
+                                    else
+                                    {
+                                <span>@quiz.Status</span>
+                                    }
+                                </td>
+                                
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+                <div class="paging">
+                    @Html.PagedListPager(Model, i => Url.Action("ViewQuizByCourse", "Quiz",
+                new { i, cid = Request.QueryString["cid"], searchText = Request.QueryString["searchText"] }))
+
+                </div>
+
+
+            }
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+
+    function reloadQuizList() {
+        var cid = document.getElementById("cid").value;
+        var searchText = document.getElementById("searchText").value;
+        $("#divShowQuizList").load('@Url.Action("ShowQuizList", "Quiz")' +
+            '?cid=' + cid + '&searchText=' + searchText+ '&quizCount=0');
+    }
+
+</script>
+

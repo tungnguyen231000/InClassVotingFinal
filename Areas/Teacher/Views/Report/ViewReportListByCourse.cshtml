@@ -1,0 +1,102 @@
+﻿@model IPagedList<InClassVoting.Models.QuizDone>
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "ViewReportListByCourse";
+    Layout = "~/Areas/Teacher/Views/Shared/_ReportLayout.cshtml";
+}
+
+
+<div class="bg-gray-100 flex-1 p-6 md:mt-16">
+    <!-- start navbar -->
+
+    <div style="  height: 90px;">
+        <div style="display: flex; height: 40px;">
+            <h1 class="h5 mg-top">@ViewBag.Course.Name</h1>
+            <!-- Example single danger button -->
+        </div>
+    </div>
+    <!-- end navbar -->
+    <!-- General Report -->
+    @if (ViewBag.CountReport == 0)
+    {
+        <p style="text-align: center; margin-top: 10%; font-size: larger;">There is no report in this course!!</p>
+    }
+    else
+    {
+        <div class="block-search-dropdown">
+            <div class="search-size text-gray-700 md:w-full md:flex md:flex-row md:justify-evenly md:pb-10 md:mb-10 md:border-b md:border-gray-200">
+
+
+                @using (Html.BeginForm("ViewReportListByCourse", "Report", FormMethod.Get))
+                {<div class="">
+                        <input type="hidden" value="@ViewBag.Course.CID" name="cid" />
+                        <span class="h5">Search: </span>
+                <input class="search-box flex-1 w-8/12 border border-black-400 txt-report" type="text" name="searchText" placeholder="Search..." value="@ViewBag.Search">
+                        <button type="submit" class="search-box"> <i class="fad fa-search"></i> </button>
+                    </div>
+
+                }
+            </div>
+
+        </div>
+        if (Model.Count() == 0)
+        {
+            <p style="text-align: center; margin-top: 10%; font-size: larger;">No report found!!!</p>
+        }
+        else
+        {
+            <div class="tb-mg-top">
+                <table class="table w-full">
+                    <thead>
+                        <tr>
+                            <th scope="col">No</th>
+                            <th class="w-5/12" style="width: 30%;" scope="col">Report name</th>
+                            <th class="w-3/12" scope="col">Number of participians</th>
+                            <th class="w-2/12" scope="col">Total mark</th>
+                            <th class="w-2/12" scope="col">Finised date</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var quiz in Model)
+                        {
+                            ViewBag.QuizCount = ViewBag.QuizCount + 1;
+                            <tr>
+                                <th scope="row">@ViewBag.QuizCount</th>
+                                <td class="w-5/12"><a href="~/Teacher/Report/ReportByStudent?qzid=@quiz.QuizDoneID" type="button">@quiz.Quiz_Name ( @quiz.NumOfQuestion Questions)</a></td>
+                                <td class="w-3/12">
+                                    @quiz.Student_QuizDone.Count
+                                    @if (quiz.Student_QuizDone.Count >= 2)
+                                    {<span>students</span>}
+                                    else
+                                    {<span>student</span>}
+                                   
+                                </td>
+                                <td class="w-2/12">@quiz.TotalMark</td>
+                                @{
+                                    string date = quiz.CreatedDate.ToString("dd-MM-yyyy");
+
+                                }
+                                <td class="w-2/12">@date</td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+
+                <div class="paging">
+                    @Html.PagedListPager(Model, i => Url.Action("ViewReportListByCourse", "Report",
+                new { i, cid = Request.QueryString["cid"], searchText = Request.QueryString["searchText"] }))
+                </div>
+            </div>
+
+
+        }
+    }
+
+</div>
+
+
+

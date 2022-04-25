@@ -1,0 +1,44 @@
+﻿.txtInput {
+    width: auto;
+    border-radius: 1.1rem;
+    height: 50px;
+}
+
+.txtLogin {
+    color: blueviolet;
+}
+
+.txtPosLogin {
+    text-align: center;
+    font-size: larger;
+    background-color: #4285f4;
+}
+
+.posGG {
+    margin: auto;
+    width: fit-content;
+}
+
+.borderCol4 {
+    margin: auto;
+    width: max-content;
+    padding: 25px;
+    border-radius: 20.1px;
+}
+
+.btnSignIn {
+    margin-top: 10px;
+}
+
+.pd-20 {
+    padding: 20px;
+}
+
+.txt-btn-login {
+    color: aliceblue;
+    font-size: x-large;
+}
+
+.color-input {
+    background: #ebeff3;
+}

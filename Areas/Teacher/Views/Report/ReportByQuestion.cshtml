@@ -1,0 +1,354 @@
+﻿@model IPagedList<InClassVoting.Models.QuestionDone>
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "ReportByQuestion";
+    Layout = "~/Areas/Teacher/Views/Shared/_ReportLayout.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="~/Content/error.css">
+
+@using (Html.BeginForm("EditReportName", "Report", FormMethod.Post, new { id = "form-edit-report-name" }))
+{
+    <div class="modal fade" id="editquizModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-gray-100 ">
+                <div class="modal-header">
+                    <h5 class="modal-title h5" id="exampleModalLabel">Edit report name</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h1 class="pop-up-content-title">Enter new name </h1>
+                    <div style=" margin-bottom:25px">
+                        <input type="hidden" id="quizDoneIDUpdate" value="@ViewBag.Quiz.QuizDoneID" name="qzid" />
+                        <input type="text" id="newReportName" class="pop-up-input px-2" name="newReportName" value="@ViewBag.Quiz.Quiz_Name">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="editReport" class="btn btn-primary">Save Changes</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@using (Html.BeginForm("DeleteReport", "Report", FormMethod.Post))
+{
+    <div class="modal fade" id="confirmDeleteQuizModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h5" id="exampleModalLabel">Delete report @ViewBag.Quiz.Quiz_Name</h5>
+                    <input type="hidden" name="qzid" value="@ViewBag.Quiz.QuizDoneID" />
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p style="color:red"> You will delete this report and all student results!!!</p>
+                    <p style="color:red">
+                        Do you wish to continue?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Modal View LO Covered -->
+<div class="modal fade " id="viewLOModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog w-6/12" style="max-width:none">
+        <div class="modal-content relative" style="max-height: 600px;">
+            <div class="modal-header">
+                <h5 class="modal-title h5" id="exampleModalLabel">Leaning outcome covered</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body overflow-y-scroll mb-20">
+                @if (ViewBag.LOList != null && ViewBag.CountLO != 0)
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="w-2" scope="col">No</th>
+                                <th class="w-4/12" scope="col">Name</th>
+                                <th class="w-8/12" scope="col">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int countLO = 0;}
+                            @foreach (var lo in ViewBag.LOList)
+                            {
+                                countLO++;
+                                <tr>
+                                    <th scope="row">@countLO</th>
+                                    <td><label>@lo.LO_Name</label></td>
+                                    <td><label>@lo.LO_Description</label></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table> }
+                else
+                {
+                    <p style="text-align: center; font-size: medium;">0 learning outcome covered!!!</p>
+                }
+
+
+            </div>
+            <button type="button" class="btn btn-secondary absolute" style="bottom:17px;right:17px;" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+<!-- End Modal -->
+<!-- Modal View chapter Covered -->
+<div class="modal fade " id="viewChapterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog w-5/12" style="max-width:none">
+        <div class="modal-content relative" style="max-height: 600px;">
+            <div class="modal-header">
+                <h5 class="modal-title h5" id="exampleModalLabel">Chapter covered</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body overflow-y-scroll mb-20">
+                @if (ViewBag.ChapterList != null && ViewBag.CountChapter != 0)
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="w-3">No</th>
+                                <th>Chapter</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int countchapt = 0;}
+                            @foreach (var chapter in ViewBag.ChapterList)
+                            {
+                                countchapt++;
+                                <tr>
+                                    <td class="w-3">@countchapt</td>
+                                    <td><label>@chapter.Name</label></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p style="text-align: center; font-size: medium;">0 chapter covered!!!</p>
+                }
+
+
+            </div>
+            <button type="button" class="btn btn-secondary absolute" style="bottom:17px;right:17px;" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+<!-- End Modal -->
+
+<div class="bg-gray-100 flex-1 p-6 md:mt-16">
+    <div class="grid grid-cols-1 w-full ">
+        <div class="topcontent w-auto flex flex-row bg-gray p-6">
+            <div class="py-6 w-6/12 ">
+                <span class="h4 w-4/12 ">@ViewBag.Quiz.Quiz_Name</span>
+                <div style="display: inline-block; margin-left: 5px" class="dropdown">
+                    <button id="dropdownMenuEdit" data-bs-toggle="dropdown"><i class="fas fa-pencil-alt "></i></button>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuEdit">
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editquizModal">Rename</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#confirmDeleteQuizModal">Delete  </a></li>
+
+                    </ul>
+                </div>
+                <div>
+                    <span class="">Finished date: @ViewBag.Quiz.CreatedDate.ToString("dd-MM-yyyy") </span>
+                </div>
+                <div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#viewChapterModal">
+                        <span style="color:blue;text-decoration:underline">View chapter covered</span>
+                    </a>
+                </div>
+                <div>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#viewLOModal">
+                        <span style="color:blue;text-decoration:underline">View learning outcome covered</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+        <div class="p-6">
+
+
+            <div class=" w-full text-center flex flex-wrap column-gap inline-block">
+                <a href="~/Teacher/Report/ReportByStudent?qzid=@ViewBag.Quiz.QuizDoneID" class=" p-2 flex-row border border-black-400 rounded-t mr-1 hover:bg-blue-200 focus:bg-blue-200">Student (<span>@ViewBag.StudentCount</span>)</a>
+                <a href="~/Teacher/Report/ReportByQuestion?qzid=@ViewBag.Quiz.QuizDoneID" class=" p-2 flex-row border border-black-400 rounded-t mr-1 hover:bg-blue-200 focus:bg-blue-200"><span style="color:indigo"><b>Question (@ViewBag.QuestCount)</b></span></a>
+                <div class="w-8/12" style="margin-left:auto">
+                    @using (Html.BeginForm("ReportByQuestion", "Report", FormMethod.Get))
+                    {
+                        <div class="w-full flex text-gray-700" style="margin-left:auto">
+                            <span class="h5" style="margin-top:8px">Search: </span>
+                            <input type="text" name="searchText" class="ml-2 pl-3 search-box flex-1 w-10/12 border-l border-r border-t border-black-400" placeholder="Search..." value="@ViewBag.Search" />
+                            <button type="submit" class="search-box"> <i class="fad fa-search"></i> </button>
+
+                        </div>
+                        <input type="hidden" name="qzid" value="@ViewBag.Quiz.QuizDoneID" />
+                    }
+                </div>
+            </div>
+
+            <!--Report-->
+
+
+            @if (ViewBag.QuestionList.Count != 0)
+            {
+                <div class="w-full bg-gray p-6 border border-black-400">
+                    <table class="w-full ">
+                        <thead>
+                            <tr>
+                                <th class="">STT</th>
+                                <th class="w-5/12 pl-3">Question</th>
+                                <th class="w-2/12">Type</th>
+                                <th class="w-1/12">Mark</th>
+                                <th class="w-2/12">Learning outcome</th>
+                                <th class="w-2/12">Correct/Total</th>
+                            </tr>
+                        </thead>
+                        @{
+                            int countQ = ViewBag.QuestNo;
+                        }
+                        @foreach (var question in Model)
+                        {
+                            countQ++;
+                    <tr class="hover:bg-gray-200">
+                        <td class="">@countQ</td>
+                        <td class="w-5/12 pl-3 pr-5"><span class="data-row">@question.Text </span></td>
+                        <td class="w-2/12">
+                            @if (question.Qtype == 5)
+                            {
+                                <span>Matching</span> }
+                            else if (question.Qtype == 2)
+                            {
+                                <span>Reading</span> }
+                            else
+                            {
+                                @question.QuestionType.Name}
+                        </td>
+                        <td class="w-1/12">@question.Mark</td>
+                        @{
+                            string loList = "";
+                            foreach (var ql in ViewBag.QuestionLoList)
+                            {
+                                if (ql.QuestionDoneID == question.Q_DoneID && ql.Qtype == question.Qtype)
+                                {
+                                    string loName = "";
+                                    if (ql.LearningOutcome.LO_Name.Length > 10)
+                                    {
+                                        loName = ql.LearningOutcome.LO_Name.Substring(0, 9) + "...";
+                                    }
+                                    else
+                                    {
+                                        loName = ql.LearningOutcome.LO_Name;
+                                    }
+                                    loList = loList + loName + ", ";
+                                }
+
+                            }
+                            if (loList != "")
+                            {
+                                loList = loList.Substring(0, loList.Length - 2);
+                            }
+                        }
+                        <td class="w-2/12 ">@loList</td>
+                        <td class="w-2/12">@question.CorrectNumber/@question.StudentReceive</td>
+                    </tr>
+                        }
+
+                    </table>
+                </div>
+                <div class="paging">
+                    @Html.PagedListPager(Model, i => Url.Action("ReportByQuestion", "Report",
+                new { i, qzid = ViewBag.Quiz.QuizDoneID, searchText = Request.QueryString["searchText"] }))
+                </div>
+            }
+            else
+            {
+                <div class="w-full bg-gray p-6 border border-black-400">
+                    <p style="text-align: center; font-size: larger;">No question found!!!</p>
+                </div>
+            }
+
+            <div style="margin-bottom: 40px;">
+                @using (Html.BeginForm("SaveReportOption", "Report", FormMethod.Post))
+                {
+                    <input type="hidden" name="qzID" value="@ViewBag.Quiz.QuizDoneID" />
+                    <input type="hidden" name="currentPage" value="1" />
+                    <input type="hidden" name="searchText" value="@ViewBag.Search" />
+                    <h4 style="margin-top: 20px" class="label-mode-4">Show to students </h4><div style="margin-top: 10px;margin-bottom:20px;display:flex">
+                        @if (@ViewBag.Quiz.PublicResult == true)
+                        {
+                            <input id="checkBoxMask" onchange="checkMark()" class="mode-rdb2" value="1" type="checkbox" name="cbPublishMark" checked />
+
+                        }
+                        else
+                        {
+                            <input id="checkBoxMask" onchange="checkMark()" class="mode-rdb2" value="1" type="checkbox" name="cbPublishMark" />
+                        }
+
+                        <h4 class="label-mode-content-2">Mark</h4>
+                        @if (@ViewBag.Quiz.PublicAnswer == true)
+                        {
+                            <input onchange="checkAnswer()" id="checkBoxAnswer" class="mode-rdb2" type="checkbox" name="cbPublishAnswer" value="1" checked />
+                        }
+                        else
+                        {
+                            <input onchange="checkAnswer()" id="checkBoxAnswer" class="mode-rdb2" type="checkbox" name="cbPublishAnswer" value="1" />
+                        }
+
+                        <h4 class="label-mode-content-2">Questions and answers</h4>
+                    </div>
+                    <div style="margin-top: 10px;margin-bottom:20px;">
+                        <button type="submit" id="savePublish" hidden class="btn-indigo mg_btn">Save Changes</button>
+                    </div>
+                }
+            </div>
+        </div>
+        <!--End Report-->
+
+
+
+
+    </div>
+
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jqueryui/jquery-ui.min.js"></script>
+<script src="~/Scripts/validate.js"></script>
+<script src="~/Scripts/teacher.report.js"></script>
+<script src="~/Scripts/bootstrapjs/bootstrap.bundle.min.js"></script>
+
+<script type="text/javascript">
+    function checkAnswer() {
+        if (document.getElementById("checkBoxAnswer").checked) {
+            document.getElementById("checkBoxMask").checked = true;
+        }
+        publishChange();
+    }
+    function checkMark() {
+        if (document.getElementById("checkBoxMask").checked == false) {
+            document.getElementById("checkBoxAnswer").checked = false;
+         
+        }
+        publishChange();
+    }
+
+    function publishChange() {
+        document.getElementById("savePublish").hidden = false;
+    }
+</script>
+

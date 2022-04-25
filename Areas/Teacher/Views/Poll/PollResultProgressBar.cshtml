@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewBag.Title = "PollResultProgressBar";
+    Layout = "~/Areas/Teacher/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="~/Content/Test.css">
+<link rel="stylesheet" type="text/css" href="~/Content/Poll.css">
+
+<!-- Modal Confirm Delete Poll-->
+@using (Html.BeginForm("DeletePoll", "Poll", FormMethod.Post))
+{
+    <div class="modal fade" id="confirmDeleteChapterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h5" id="exampleModalLabel">Delete poll @ViewBag.Poll.PollName </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p style="color:red"> You will delete this poll along with the result!!!</p>
+                    <p style="color:red">
+                        Do you wish to continue?
+                    </p>
+                </div>
+                <input type="hidden" name="poid" value="@ViewBag.Poll.PollID"/>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!-- Modal Confirm Delete Poll -->
+
+<!-- Modal reopen poll -->
+@using (Html.BeginForm("ReopenPoll", "Poll", FormMethod.Post, new { enctype = "multipart/form-data", id = "form-reopen-poll" }))
+{
+    <div class="modal fade" id="reopenPollModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-gray-100">
+                <div class="modal-header">
+                    <h5 class="modal-title h5" id="exampleModalLabel">Reopen poll</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p style="color:blue">
+                        A new poll with the same question and answer will be created
+                    </p>
+                    <div style="margin-bottom:10px">
+                        <h1 class="lo-label">New poll name </h1>
+                        <input class="txt-modal-newLO" type="text" id="newPollName" name="newPollName" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="oldPollID" value="@ViewBag.Poll.PollID" />
+                    <button type="submit" id="reopenPoll" class="btn btn-primary">Create</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!-- End Modal -->
+<div class="bg-gray-100 flex-1 p-6 pt-32">
+    <div>
+        <a href="~/Teacher/Report/ReportPollList"><span style="color:blue"><u>Back to poll list</u></span> </a>
+    </div>
+    <div class="grid grid-cols-1">
+        <div class="items-center bg-gray p-6 ">
+            <h1 class="h4 text-center">
+                <span>@ViewBag.Poll.PollName</span>
+            </h1>
+        </div>
+
+
+        <div class="w-full items-center bg-gray p-6 border border-black-400">
+            <div>
+                <span class="h5">Number of participants:</span>
+                <span id="data-total" class="h5">@ViewBag.Poll.TotalParticipian</span>
+            </div>
+        </div>
+        <div class=" items-center bg-gray p-6 border border-black-400">
+            <div class=" items-center bg-gray">
+                <div class="w-full items-center bg-gray px-6 pt-6">
+                    <span class="question-num">
+                        Question:
+                    </span>
+                </div>
+
+                <div class="w-full items-center bg-gray ">
+                    <div contenteditable="false" class="w-full bg-gray px-6 pt-2 pb-6 font-sans">
+                        <span>  @ViewBag.Poll.Question</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class=" items-center bg-gray p-6 border border-black-400">
+
+
+
+            <div class="right-rating">
+                <ul class="order-list">
+                    @foreach (var pollAnswer in ViewBag.Poll.Poll_Answer)
+                    {
+                        <li>
+
+                            <div class="star-value">
+                                <div class="w-full p-3 mt-2" name="option2" contenteditable="false" id="data-string">@pollAnswer.Answer_Text</div>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar" id="data-color" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+
+                                <div id="data-process" class="rating-hit px-1 font-bold">@pollAnswer.ChosenQuantity</div>
+                            </div>
+
+                        </li>
+                    }
+                </ul>
+            </div>
+
+
+
+        </div>
+
+    </div>
+    @*<div style="display:flex;">
+            <a href="~/Teacher/Home/Home" class="btn float-left">Back To Home</a>
+
+        </div>*@
+    <div class="text-center flex flex-wrap items-center justify-center column-gap inline-block mt-4">
+        <button type="button" class="btn btn-bs-danger mr-6" data-bs-toggle="modal" data-bs-target="#confirmDeleteChapterModal">Delete</button>
+
+
+        <button type="button" class="btn btn-indigo w-3/12" data-bs-toggle="modal" data-bs-target="#reopenPollModal"> Reopen this poll</button>
+
+    </div>
+
+</div>
+
+<script src="~/Scripts/processchart.js"></script>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jqueryui/jquery-ui.min.js"></script>
+<script src="~/Scripts/teacher.poll.js"></script>

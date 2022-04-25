@@ -1,0 +1,247 @@
+﻿
+@{
+    ViewBag.Title = "EditMatchingQuestion";
+    Layout = "~/Areas/Teacher/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" type="text/css" href="~/Scripts/jqueryui/jquery-ui.min.css">
+
+<div class="bg-gray-100 flex-1 p-6 pt-32">
+
+    @using (Html.BeginForm("EditMatchingQuestion", "Question", FormMethod.Post, new { enctype = "multipart/form-data", id = "matching-form", autocomplete = "off" }))
+    {
+        <!-- Modal add lo -->
+        <div class="modal fade " id="addLOModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog w-7/12" style="max-width:none">
+                <div class="modal-content relative " style="max-height: 600px;">
+                    <div class="modal-header">
+                        <h5 class="modal-title h5" id="exampleModalLabel">Change question's learning outcome</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body overflow-y-scroll mb-20">
+                        @if (ViewBag.LoList != null && ViewBag.LoList.Count != 0)
+                        {
+                            int countLo = 0;
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="w-2" scope="col">No</th>
+                                        <td class="w-2" scope="col"> </td>
+                                        <th class="w-4/12" scope="col">Name</th>
+                                        <th class="w-8/12" scope="col">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var lo in ViewBag.LoList)
+                                    {
+                                        bool isExisted = false;
+                                        if (ViewBag.QuestionLO != null)
+                                        {
+                                            foreach (var ql in ViewBag.QuestionLO)
+                                            {
+                                                if (ql.LearningOutcomeID == lo.LOID)
+                                                {
+                                                    isExisted = true;
+                                                }
+                                            }
+                                        }
+
+                                        countLo++;
+
+                                        <tr>
+                                            <th scope="row">@countLo</th>
+                                            @if (isExisted == true)
+                                            {
+
+                                                <td><input type="checkbox" class="form-check-input" id="cbLOID" name="lo" value="@lo.LOID" checked></td>
+                                            }
+                                            else
+                                            {
+                                                <td><input type="checkbox" class="form-check-input" id="cbLOID" name="lo" value="@lo.LOID"></td>
+                                            }
+                                            <td><label>@lo.LO_Name</label></td>
+                                            <td><label>@lo.LO_Description</label></td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p style="text-align: center; font-size: medium;">There is no learning outcome to choose!!</p>
+                        }
+
+                    </div>
+
+                    <button type="button" style="bottom:17px;right:17px;" class="btn btn-secondary w-24 absolute" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal -->
+
+        <input type="hidden" name="chid" value="@ViewBag.Matching.ChapterId" />
+        <input type="hidden" name="qid" value="@ViewBag.Matching.MID" />
+        <input type="hidden" name="previousUrl" value="@ViewBag.Previous" />
+        <div class="grid grid-cols-1 w-full ">
+            <div class="w-full items-center bg-gray ">
+                <div class="text-center">
+                    <h1 class="h4">
+                        <span>Question Type:</span>
+                        <span>Matching</span>
+                    </h1>
+                </div>
+            </div>
+
+            <div class="w-full bg-gray p-6 border border-black-400">
+                <div class="w-full bg-gray p-6 text-center flex items-center justify-center inline-block">
+                    <div class="w-full">
+                        <div class="flex items-center justify-center column-gap inline-block">
+                            <div class="text-center my-2 w-6/12 px-4" name="name"> <span><b>Column A</b></span></div>
+                            <div class="text-center px-2 ">
+                                <span><b>Solution</b></span>
+                            </div>
+                            <div class="text-center my-2 w-6/12 px-4" name="name"> <span><b>Column B</b></span></div>
+                        </div>
+                        <ul id="table-matching" class="w-full">
+
+                            <li id="matching-option" class="w-full flex">
+                                <div class="my-2 w-6/12 px-4">
+                                    <!--Textarea bên trái-->
+                                    <textarea id="matching-left" style="white-space: pre-wrap" name="columnA" class="border w-full p-2 border-black-400 bg-blue-200" spellcheck="false" placeholder="...">@ViewBag.Matching.ColumnA</textarea>
+                                </div>
+                                <!--List input ở giữa-->
+                                <div id="table-solution" class="grid grid-cols-1 border border-black-400 mt-2 w-1/12 grid-rows-6">
+                                    @if (ViewBag.Solution.Count > 0)
+                                    {
+                                        foreach (var sol in ViewBag.Solution)
+                                        {
+                                            <input type="text" id="matching-solution" class="text-center" name="solution" value="@sol" readonly />
+                                        }
+                                    }
+
+                                </div>
+                                <div class="my-2 w-6/12 px-4">
+                                    <!--Textarea bên phải-->
+                                    <textarea id="matching-right" style="white-space: pre-wrap" class="border w-full p-2 border-black-400 bg-green-200" name="columnB" spellcheck="false" placeholder="...">@ViewBag.Matching.ColumnB</textarea>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-2 flex flex-wrap justify-center column-gap inline-block mt-4">
+                    <div class="w-1/12 text-center">
+                        <span class=" text-center">Number:</span>
+                    </div>
+                    <div class="w-1/12 text-center">
+                        <span class=" text-center">Letter:</span>
+                    </div>
+                </div>
+                <div class="mt-2 flex flex-wrap justify-center column-gap inline-block mt-4">
+                    <div class="mx-2 w-1/12 text-center">
+                        <input type="text" name="name" id="number" class="border border-black-400" style="width:-webkit-fill-available;" value="" />
+                    </div>
+                    <div class="mx-2 w-1/12 text-center">
+                        <input type="text" name="name" id="letter" class="border border-black-400" style="width:-webkit-fill-available;" value="" />
+                    </div>
+                </div>
+                <div class="mt-2 flex flex-wrap justify-center column-gap inline-block mt-4">
+                    <a id="add-matching" class=" btn bg-blue-200 mx-2 " name="add">Add solution</a>
+                </div>
+                <div class="mt-2 flex flex-wrap justify-center column-gap inline-block mt-4">
+                    <a id="remove-matching" class=" btn bg-blue-200 mx-2 " name="remove">Remove Solution</a>
+                </div>
+            </div>
+
+            <div class="flex md:mx-16">
+                <div class="m-6  ">
+                    <span class="label-mode-4">Time (second): </span>
+                    <input class="border border-black-400 pl-1 w-32" id="timeMatching" min="15" max="3600" step="1" type="number" name="time" placeholder="Time" value="@ViewBag.Matching.Time">
+                </div>
+                <div class="m-6  ">
+                    <span class="label-mode-4">Mark: </span>
+                    <input class="border border-black-400 pl-1 w-32" id="markMatching" min="0.5" max="10" step="0.5" type="number" name="mark" placeholder="Mark" value="@ViewBag.Matching.Mark">
+                </div>
+            </div>
+
+            <div class="text-center flex flex-wrap items-center justify-center column-gap inline-block m-6">
+                <a href="#" class="btn btn-bs-info" style="width: fit-content;" data-bs-toggle="modal" data-bs-target="#addLOModal">
+                    <span>
+                        Change learning outcome
+                    </span>
+                </a>
+            </div>
+
+            <div class="text-center flex flex-wrap items-center justify-center column-gap inline-block mt-4">
+                <button type="button" id="previewMatching" class="btn mr-6" data-bs-toggle="modal" data-bs-target="#matchingPreview">
+                    Preview
+                </button>
+                <input type="submit" class="btn btn-bs-primary w-3/12" name="submit" value="Save Changes">
+            </div>
+
+        </div>
+
+    }
+</div>
+<!--Preview-->
+<div class="modal fade" id="matchingPreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog w-9/12 mt-32 mx-auto" style="max-width:none" role="document">
+        <div class="modal-content " style="max-height: 600px;overflow-y:scroll">
+            <div class="">
+                <button type="button" class="close float-right p-3" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h5 class="text-center h5" id="exampleModalLabel">Preview</h5>
+            </div>
+            <div class=" w-full p-5">
+                <div class="w-full bg-gray p-6 text-center flex items-center justify-center inline-block">
+                    <div class="w-full">
+                        <div class="flex items-center justify-center column-gap inline-block">
+                            <div class="text-center my-2 w-6/12 px-4" name="name">Left Matching</div>
+                            <div class="grid grid-cols-1 px-2 w-1/12">
+                                <span>Solution</span>
+                            </div>
+                            <div class="text-center my-2 w-6/12 px-4" name="name">Right Matching</div>
+                        </div>
+                        <ul id="table-matching" class="w-full">
+
+                            <li id="matching-option" class="w-full flex">
+                                <div class="my-2 w-6/12 px-4">
+                                    <!--Textarea bên trái-->
+                                    <textarea id="matching-left-preview" name="name" class="border w-full p-2 border-black-400 bg-blue-200" style="height:100px" rows="3" spellcheck="false" placeholder="Question here..." readonly></textarea>
+                                </div>
+                                <!--List input ở giữa-->
+                                <div id="table-solution-preview" class="grid grid-cols-1 border border-black-400 mt-2 w-1/12 grid-rows-6">
+                                </div>
+                                <div class="my-2 w-6/12 px-4">
+                                    <!--Textarea bên phải-->
+                                    <textarea id="matching-right-preview" class="border w-full p-2 border-black-400 bg-green-200" name="name" spellcheck="false" placeholder="Answer here..." readonly></textarea>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-2 text-center flex flex-wrap items-center justify-center column-gap inline-block mt-4">
+                    <span class="mx-2 w-1/12 text-center">Number:</span>
+                    <span class="mx-2 w-1/12 text-center">Letter:</span>
+                </div>
+                <div class="mt-2 text-center flex flex-wrap items-center justify-center column-gap inline-block mt-4">
+                    <input type="number" name="name" id="number-preview" class="mx-2 w-1/12 border border-black-400 text-center" value="" disabled />
+                    <input type="text" name="name" id="letter-preview" class="mx-2 w-1/12 border border-black-400 text-center" value="" disabled />
+                </div>
+                <!--Matching Q1 thay đổi để matching với button-->
+                <div class="mt-2 flex flex-wrap justify-center column-gap inline-block mt-4">
+                    <a id="add-matching-preview" class=" btn bg-blue-200 mx-2 " style=" pointer-events: none" name="add" disabled>Add solution</a>
+                </div>
+                <div class="mt-2 flex flex-wrap justify-center column-gap inline-block mt-4">
+                    <a id="remove-matching-preview" class=" btn bg-blue-200 mx-2 " style=" pointer-events: none" name="remove" disabled>Remove Solution</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>*@
+@*<script src="~/Scripts/validate.js"></script>*@

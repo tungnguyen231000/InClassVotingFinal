@@ -1,0 +1,62 @@
+﻿label.error {
+    color: red;
+    font-weight:bold;
+}
+
+.true-answer {
+    background-color: #ace5b4;
+}
+.false-answer {
+    background-color: #FF6F6F;
+    color: whitesmoke;
+}
+
+.correct-background {
+    background-color: #E9E9E9;
+}
+
+.quest-answer {
+    color: green;
+    font-weight: bold;
+}
+
+.mark-text {
+    font-weight: bold;
+    color: blue;
+}
+
+.mark-total {
+    font-weight: bold;
+    color: blue;
+}
+
+.question-num {
+    font-weight: bold;
+    font-size:18px;
+    text-decoration: underline;
+}
+
+.question-num-2 {
+    font-weight: bold;
+    font-size:17px;
+    /*text-decoration: underline;*/
+}
+
+.shuffle-lable {
+    margin:auto;
+    font-size:16px;
+    text-decoration: underline;
+}
+
+.div-margin-20 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.text-finish-quiz{
+    margin-top:50px;
+    font-size:25px;
+    color:mediumblue;
+    font-weight:600;
+
+}

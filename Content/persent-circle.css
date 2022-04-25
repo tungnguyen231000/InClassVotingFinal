@@ -1,0 +1,90 @@
+﻿.box {
+    position: relative;
+    width: auto;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 23px;
+}
+
+    .box .percent {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .box .percent svg {
+            position: relative;
+            width: 150px;
+            height: 150px;
+        }
+
+            .box .percent svg circle {
+                width: 150px;
+                height: 150px;
+                fill: none;
+                stroke-width: 10;
+                stroke-dasharray: 440;
+                stroke-dashoffset: 440;
+                transform: translate(5px, 5px);
+                stroke-linecap: round;
+            }
+
+                .box .percent svg circle:nth-child(1) {
+                    stroke-dashoffset: 0;
+                    stroke: #f3f3f3;
+                }
+
+                .box .percent svg circle:nth-child(2) {
+                    stroke-dashoffset: calc(440);
+                    stroke: #f40303;
+                    transition: stroke-dashoffset 3s ease-in-out;
+                    animation: animations 3s linear;
+                }
+
+@keyframes animations {
+    0% {
+        stroke: #03f4c8;
+        background-color: #03a9f4;
+    }
+
+    20% {
+        stroke: #03a9f4;
+    }
+
+    40% {
+        stroke: #03ecf4;
+    }
+
+    60% {
+        stroke: #a803f4;
+    }
+
+    80% {
+        stroke: #f4c803;
+    }
+
+    100% {
+        stroke: #f40303;
+        background-color: #00f3e7;
+    }
+}
+
+#number {
+    position: absolute;
+    font-size: 28px;
+    font-family: cursive;
+    font-weight: 600;
+}
+
+.loding-text {
+    margin-top: 23px;
+    font-size: 28px;
+    font-family: cursive;
+    font-weight: 600;
+}

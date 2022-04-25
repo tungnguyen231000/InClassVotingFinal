@@ -1,0 +1,574 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{72CAB2FA-46F8-48FA-8B4E-4540C0C9C7A9}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>InClassVoting</RootNamespace>
+    <AssemblyName>InClassVoting</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44350</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=5.8.4.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>packages\EPPlus.5.8.4\lib\net45\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost">
+      <HintPath>packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserManagementController.cs" />
+    <Compile Include="Areas\Student\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Student\Controllers\PollController.cs" />
+    <Compile Include="Areas\Student\Controllers\QuizController.cs" />
+    <Compile Include="Areas\Student\Controllers\ReportController.cs" />
+    <Compile Include="Areas\Student\StudentAreaRegistration.cs" />
+    <Compile Include="Areas\Teacher\Controllers\PollController\PollController.cs" />
+    <Compile Include="Areas\Teacher\Controllers\QuestionBankController\ChapterController.cs" />
+    <Compile Include="Areas\Teacher\Controllers\QuestionBankController\CourseController.cs" />
+    <Compile Include="Areas\Teacher\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Teacher\Controllers\QuestionBankController\LearningOutcomeController.cs" />
+    <Compile Include="Areas\Teacher\Controllers\QuestionBankController\QuestionController.cs" />
+    <Compile Include="Areas\Teacher\Controllers\QuizLibraryController\QuizController.cs" />
+    <Compile Include="Areas\Teacher\Controllers\ReportController\ReportController.cs" />
+    <Compile Include="Areas\Teacher\teacherAreaRegistration.cs" />
+    <Compile Include="Common.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\HomeTotalController.cs" />
+    <Compile Include="Filter\AccessAuthenForQuiz.cs" />
+    <Compile Include="Filter\AccessAuthenticationFilter.cs" />
+    <Compile Include="Filter\NoCache.cs" />
+    <Compile Include="Filter\UserAuthorizeFilter.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Admin.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Chapter.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Course.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DBModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DBModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DBModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DBModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DBModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LearningOutcome.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MatchQuestion.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MatchQuestionDone.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Passage.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Passage_Done.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Poll.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Poll_Answer.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Question.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\QuestionAnswer.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\QuestionAnswerDone.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\QuestionDone.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\QuestionDoneLO.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\QuestionLO.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\QuestionType.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Quiz.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\QuizDone.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Student.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Student_Answer.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Student_PollAnswer.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Student_QuizDone.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Teacher.cs">
+      <DependentUpon>DBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrapcss\bootstrap-grid.css" />
+    <Content Include="Content\bootstrapcss\bootstrap-grid.min.css" />
+    <Content Include="Content\bootstrapcss\bootstrap-grid.rtl.css" />
+    <Content Include="Content\bootstrapcss\bootstrap-grid.rtl.min.css" />
+    <Content Include="Content\bootstrapcss\bootstrap-reboot.css" />
+    <Content Include="Content\bootstrapcss\bootstrap-reboot.min.css" />
+    <Content Include="Content\bootstrapcss\bootstrap-reboot.rtl.css" />
+    <Content Include="Content\bootstrapcss\bootstrap-reboot.rtl.min.css" />
+    <Content Include="Content\bootstrapcss\bootstrap-utilities.css" />
+    <Content Include="Content\bootstrapcss\bootstrap-utilities.min.css" />
+    <Content Include="Content\bootstrapcss\bootstrap-utilities.rtl.css" />
+    <Content Include="Content\bootstrapcss\bootstrap-utilities.rtl.min.css" />
+    <Content Include="Content\bootstrapcss\bootstrap.css" />
+    <Content Include="Content\bootstrapcss\bootstrap.min.css" />
+    <Content Include="Content\bootstrapcss\bootstrap.rtl.css" />
+    <Content Include="Content\bootstrapcss\bootstrap.rtl.min.css" />
+    <Content Include="Content\drag-and-drop.css" />
+    <Content Include="Content\error.css" />
+    <Content Include="Content\img\admin.png" />
+    <Content Include="Content\img\calendar.png" />
+    <Content Include="Content\img\congrats.svg" />
+    <Content Include="Content\img\editing.png" />
+    <Content Include="Content\img\error.jpg" />
+    <Content Include="Content\img\fav.png" />
+    <Content Include="Content\img\food.svg" />
+    <Content Include="Content\img\fptlogo.jpg" />
+    <Content Include="Content\img\happy.svg" />
+    <Content Include="Content\img\idea.png" />
+    <Content Include="Content\img\index-1.png" />
+    <Content Include="Content\img\index.png" />
+    <Content Include="Content\img\logo.png" />
+    <Content Include="Content\img\logo_dai-hoc-fpt.jpg" />
+    <Content Include="Content\img\open-book.png" />
+    <Content Include="Content\img\report.png" />
+    <Content Include="Content\img\request.png" />
+    <Content Include="Content\img\sneakers.svg" />
+    <Content Include="Content\img\soccer.svg" />
+    <Content Include="Content\img\socks.svg" />
+    <Content Include="Content\img\stop.jpg" />
+    <Content Include="Content\img\system.png" />
+    <Content Include="Content\img\tailwindcss.svg" />
+    <Content Include="Content\img\team.png" />
+    <Content Include="Content\img\user.svg" />
+    <Content Include="Content\img\user1.jpg" />
+    <Content Include="Content\img\user2.jpg" />
+    <Content Include="Content\img\user3.jpg" />
+    <Content Include="Content\Layout.css" />
+    <Content Include="Content\LO.css" />
+    <Content Include="Content\Login.css" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\persent-circle.css" />
+    <Content Include="Content\Poll.css" />
+    <Content Include="Content\sidebar.css" />
+    <Content Include="Content\Slide.css" />
+    <Content Include="Content\StudentReport.css" />
+    <Content Include="Content\Style.css" />
+    <Content Include="Content\Test.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Models\DBModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DBModel.edmx</DependentUpon>
+      <LastGenOutput>DBModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\DBModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DBModel.edmx</DependentUpon>
+      <LastGenOutput>DBModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Areas\Teacher\Views\web.config" />
+    <Content Include="Areas\Teacher\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Teacher\Views\Shared\_QuestionBankLayout.cshtml" />
+    <Content Include="Areas\Teacher\Views\Shared\_QuizLibraryLayout.cshtml" />
+    <Content Include="Areas\Teacher\Views\Home\Home.cshtml" />
+    <Content Include="Areas\Teacher\Views\Course\_ShowCourseListForQuestionBank.cshtml" />
+    <Content Include="Areas\Teacher\Views\Course\_ShowCourseListForQuizLibrary.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\QuestionBank.cshtml" />
+    <Content Include="Areas\Teacher\Views\Quiz\QuizLibrary.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\ViewQuestionByChapter.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\CreateMultipleChoiceQuestion.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\CreateReadingQuestion.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\EditMultipleChoiceQuestion.cshtml" />
+    <Content Include="Areas\Teacher\Views\Quiz\ViewQuizByCourse.cshtml" />
+    <Content Include="Areas\Teacher\Views\Quiz\QuizDetail.cshtml" />
+    <Content Include="Areas\Teacher\Views\Quiz\_ShowQuestionForEditQuiz.cshtml" />
+    <Content Include="Areas\Teacher\Views\Quiz\_ShowQuestionForNewQuiz.cshtml" />
+    <Content Include="Areas\Teacher\Views\Quiz\CreateNewQuiz.cshtml" />
+    <Content Include="Areas\Student\Views\web.config" />
+    <Content Include="Areas\Student\Views\Home\Home.cshtml" />
+    <Content Include="Areas\Teacher\Views\Quiz\QuizStarted.cshtml" />
+    <Content Include="Areas\Student\Views\Quiz\QuizNotStartYet.cshtml" />
+    <Content Include="Areas\Teacher\Views\Course\_ShowCourseListForReport.cshtml" />
+    <Content Include="Areas\Teacher\Views\Shared\_ReportLayout.cshtml" />
+    <Content Include="Areas\Teacher\Views\Report\ReportHome.cshtml" />
+    <Content Include="Areas\Teacher\Views\Report\ViewReportListByCourse.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\_ShowQuestionsList.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\EditReadingQuestion.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\CreateShortAnswerQuestion.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\EditShortAnswerQuestion.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\CreateMatchingQuestion.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\CreateIndicateMistakeQuestion.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\EditIndicateMistakeQuestion.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\EditMatchingQuestion.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\CreateFillBlankQuestion.cshtml" />
+    <Content Include="Areas\Teacher\Views\Question\EditFillBlankQuestion.cshtml" />
+    <Content Include="Areas\Student\Views\Report\QuizReport.cshtml" />
+    <Content Include="Areas\Teacher\Views\Report\ReportStudentQuiz.cshtml" />
+    <Content Include="Areas\Teacher\Views\Report\ReportByQuestion.cshtml" />
+    <Content Include="Areas\Teacher\Views\Report\ReportByStudent.cshtml" />
+    <Content Include="Areas\Teacher\Views\LearningOutcome\ViewLearningOutcome.cshtml" />
+    <Content Include="Areas\Teacher\Views\Quiz\PreviewQuizPaperTest.cshtml" />
+    <Content Include="Areas\Student\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Student\Views\Report\ReportHome.cshtml" />
+    <Content Include="Areas\Teacher\Views\Poll\CreatePoll.cshtml" />
+    <Content Include="Areas\Teacher\Views\Poll\ShowPollLink.cshtml" />
+    <Content Include="Areas\Student\Views\Poll\DoPoll.cshtml" />
+    <Content Include="Areas\Teacher\Views\Poll\PollResultProgressBar.cshtml" />
+    <Content Include="Areas\Teacher\Views\Poll\PollResultPieChart.cshtml" />
+    <Content Include="Areas\Teacher\Views\Poll\StartPoll.cshtml" />
+    <Content Include="Areas\Teacher\Views\Quiz\PreviewQuizQuestionByQuestion.cshtml" />
+    <Content Include="Areas\Student\Views\Quiz\DoQuizQuestionByQuestion.cshtml" />
+    <EntityDeploy Include="Models\DBModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DBModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\DBModel.edmx.diagram">
+      <DependentUpon>DBModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Areas\Student\Views\Quiz\DoQuizShowAllQuestion.cshtml" />
+    <Content Include="Areas\Teacher\Views\Report\ReportPollList.cshtml" />
+    <Content Include="Areas\Student\Views\Poll\PollAlreadyDone.cshtml" />
+    <Content Include="Areas\Student\Views\Poll\PollFinished.cshtml" />
+    <Content Include="Areas\Student\Views\Poll\PollNotAvailble.cshtml" />
+    <Content Include="Areas\Student\Views\Quiz\QuizTimeOverDue.cshtml" />
+    <Content Include="Areas\Admin\Views\web.config" />
+    <Content Include="Areas\Admin\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\Home.cshtml" />
+    <Content Include="Areas\Admin\Views\UserManagement\TeacherReport.cshtml" />
+    <Content Include="Areas\Admin\Views\UserManagement\StudentReport.cshtml" />
+    <Content Include="Content\bootstrapcss\bootstrap-grid.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap-grid.min.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap-grid.rtl.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap-grid.rtl.min.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap-reboot.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap-reboot.rtl.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap-reboot.rtl.min.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap-utilities.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap-utilities.min.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap-utilities.rtl.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap-utilities.rtl.min.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap.rtl.css.map" />
+    <Content Include="Content\bootstrapcss\bootstrap.rtl.min.css.map" />
+    <None Include="Properties\PublishProfiles\InClassVoting - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\InClassVoting - Web Deploy.pubxml" />
+    <Content Include="Scripts\bootstrapjs\bootstrap.bundle.js.map" />
+    <Content Include="Scripts\bootstrapjs\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrapjs\bootstrap.esm.js.map" />
+    <Content Include="Scripts\bootstrapjs\bootstrap.esm.min.js.map" />
+    <Content Include="Scripts\bootstrapjs\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrapjs\bootstrap.min.js.map" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\bootstrapjs\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrapjs\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrapjs\bootstrap.esm.js" />
+    <Content Include="Scripts\bootstrapjs\bootstrap.esm.min.js" />
+    <Content Include="Scripts\bootstrapjs\bootstrap.js" />
+    <Content Include="Scripts\bootstrapjs\bootstrap.min.js" />
+    <Content Include="Scripts\bootstrapjs\popper.min.js" />
+    <Content Include="Scripts\circle.js" />
+    <Content Include="Scripts\countdown.js" />
+    <Content Include="Scripts\dragdropimage.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jqueryui\jquery-ui.css" />
+    <Content Include="Scripts\jqueryui\jquery-ui.js" />
+    <Content Include="Scripts\jqueryui\jquery-ui.min.css" />
+    <Content Include="Scripts\jqueryui\jquery-ui.min.js" />
+    <Content Include="Scripts\jqueryui\jquery-ui.structure.css" />
+    <Content Include="Scripts\jqueryui\jquery-ui.structure.min.css" />
+    <Content Include="Scripts\jqueryui\jquery-ui.theme.css" />
+    <Content Include="Scripts\jqueryui\jquery-ui.theme.min.css" />
+    <Content Include="Scripts\Layout.js" />
+    <Content Include="Scripts\Login.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\more-option.js" />
+    <Content Include="Scripts\piechart.js" />
+    <Content Include="Scripts\preview.js" />
+    <Content Include="Scripts\processchart.js" />
+    <Content Include="Scripts\studentReport.js" />
+    <Content Include="Scripts\teacher.poll.countdown.js" />
+    <Content Include="Scripts\teacher.poll.js" />
+    <Content Include="Scripts\teacher.quiz.countdown.js" />
+    <Content Include="Scripts\teacher.quiz.js" />
+    <Content Include="Scripts\sidebar.js" />
+    <Content Include="Scripts\SlideQ.js" />
+    <Content Include="Scripts\teacher.course.js" />
+    <Content Include="Scripts\teacher.lo.js" />
+    <Content Include="Scripts\teacher.report.js" />
+    <Content Include="Scripts\TestJS.js" />
+    <Content Include="Scripts\validate.js" />
+    <Content Include="Scripts\validate2.js" />
+    <Content Include="Scripts\validateAdmin.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Scripts\teacher.chapter.js" />
+    <Content Include="Views\HomeTotal\Home.cshtml" />
+    <Content Include="Scripts\student.poll.countdown.js" />
+    <Content Include="Views\HomeTotal\Login.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Error\UnAuthorized.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\images\" />
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Views\Report\" />
+    <Folder Include="Areas\Student\Data\" />
+    <Folder Include="Areas\Student\Views\Default\" />
+    <Folder Include="Areas\Teacher\Data\" />
+    <Folder Include="Areas\Teacher\Views\Chapter\" />
+    <Folder Include="Views\Default\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>56944</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44350/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

@@ -1,0 +1,136 @@
+﻿
+@{
+    ViewBag.Title = "CreatePoll";
+    Layout = "~/Areas/Teacher/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="bg-gray-100 flex-1 p-6 pt-24">
+    @using (Html.BeginForm("CreatePoll", "Poll", FormMethod.Post, new { id = "poll-form", autocomplete = "off" }))
+    {
+        <div class="w-full items-center bg-gray " style="margin-bottom:10px">
+            <div class="text-center">
+                <h1 class="h3">
+                    <span>Poll</span>
+                </h1>
+            </div>
+
+            <div class="flex w-full" style="margin-bottom:20px;margin-top:10px">
+                <div class="flex pl-5 ">
+                    <div>
+                        <span class="quiz-lable">Poll name: </span>
+                    </div>
+                    <div class="flex flex-col">
+                        <input type="text" id="pollName" class="poll-name-input border border-black-400" name="pollName" placeholder="..." />
+                    </div>
+                </div>
+                <div class=" flex pl-5">
+                    <div>
+                        <span class="quiz-lable">Time(second):</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <input class="border border-black-400 poll-time-input w-32" id="timePoll" step="1" min="20" max="3600" type="number" name="time" placeholder="">
+                    </div>
+                </div>
+                <div class="flex pl-5 justify-around w-7/12">
+                    <div>
+                        <span class="poll-label">Poll mode: </span>
+                    </div>
+                    <div>
+                        <input id="qQuiz" class="mode-rdb-3" name="rdPollType" type="radio" value="0" checked />
+                        <span class="label-mode-content-4"> Allow student choose one answer</span>
+                    </div>
+
+                    <div>
+                        <input id="papeQuiz" class="mode-rdb-3" name="rdPollType" type="radio" value="1" />
+                        <span class="label-mode-content-4">Allow student choose multiple answer</span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="grid grid-cols-1 w-full">
+            <div class="w-full items-center bg-gray p-6 border-l border-r border-t border-black-400">
+                <div style="margin-bottom:5px">
+                    <span class="question-num-2">Question:</span>
+                </div>
+
+                <div>
+                    <textarea class="p-2 w-full border border-black-400 q1-preview" name="questionText" rows="4" id="questionPoll" placeholder=" ..."></textarea>
+                </div>
+
+            </div>
+
+            <div class=" w-full items-center bg-gray p-6 border border-black-400">
+                <div class="ms-error"></div>
+                <table id="table-poll" class="w-full border-spacing-2 option-table">
+
+                    @for (int i = 0; i < 6; i++)
+                    {
+                        int no = i + 1;
+                        <tr id="poll-option">
+                            <td><span>@no</span></td>
+                            <td class="w-full"><input type="text" id="txtPoll" class="w-full p-3 mt-2 option border border-black-400" name="option" placeholder="..."></td>
+                            <td class="w-2"><i id="remove-option-poll" class="far fa-times-circle my-3 p-2"></i></td>
+                        </tr>
+                    }
+
+
+                </table>
+                <div class="text-center flex flex-wrap items-center justify-center column-gap inline-block mt-4">
+                    <input type="button" value="Add more option" class="option-btn btn btn-gray mt-2 w-6/12 border-dashed border-2 " />
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <div class="text-center flex flex-wrap items-center justify-center column-gap inline-block mt-4">
+                    <button type="button" id="previewPoll" class="btn mr-6" data-bs-toggle="modal" data-bs-target="#pollPreview">
+                        Preview
+                    </button>
+                    <input type="submit" id="createPoll" value="Create poll" class="btn btn-bs-primary w-3/12" />
+                </div>
+            </div>
+        </div>
+    }
+
+
+    <!--Thêm Dialog Paper Preview-->
+    <div class="modal fade" id="pollPreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog w-9/12" style="max-width:none" role="document">
+            <div class="modal-content ">
+                <div class="">
+                    <button type="button" class="close float-right p-3" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="text-center h5" id="exampleModalLabel">Preview</h4>
+                </div>
+                <div id="" class="p-5">
+                    <div class="w-full items-center bg-gray  ">
+                        <div>
+                            <textarea id="questionPoll-preview" class="q2-preview w-full bg-gray p-6 font-sans font-semibold">
+                            </textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="w-full items-center bg-gray">
+                        <table id="table-poll-preview" class="w-full border-spacing-2">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jqueryui/jquery-ui.min.js"></script>
+<script src="~/Scripts/poll.js"></script>
+<script src="~/Scripts/TestJS.js"></script>
+<script src="~/Scripts/validate.js"></script>
+
+

@@ -1,0 +1,315 @@
+﻿@model IPagedList<InClassVoting.Models.Question>
+@using PagedList;
+@using PagedList.Mvc;
+
+@{ ViewBag.Title = "ViewQuestionByChapter";
+    Layout = "~/Areas/teacher/Views/Shared/_QuestionBankLayout.cshtml"; }
+
+<link rel="stylesheet" type="text/css" href="~/Content/PagedList.css">
+
+
+<!-- Modal Edit Chapter Name -->
+@using (Html.BeginForm("EditChapter", "Chapter", FormMethod.Post, new { id = "form-edit-chapter" }))
+{
+    <div class="modal fade" id="editChapterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-gray-100 ">
+                <div class="modal-header">
+                    <h5 class="modal-title h5" id="exampleModalLabel">Edit chapter name</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h1 class="pop-up-content-title">Enter new chapter name </h1>
+                    <div style=" margin-bottom:25px">
+                        <input type="hidden" id="chidEditChapter" name="chid" value="@ViewBag.Chapter.ChID" />
+                        <input type="hidden" id="cidEditChapter" value="@ViewBag.Chapter.CourseID" />
+                        <input type="text" id="newNameEditChapter" name="newChapterName" class="pop-up-input px-2" value="@ViewBag.Chapter.Name" />
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="editChapter" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>}
+<!-- End Modal -->
+<!-- Modal Confirm Delete Chapter -->
+@using (Html.BeginForm("DeleteChapter", "Chapter", FormMethod.Post))
+{
+    <div class="modal fade" id="confirmDeleteChapterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title h5" id="exampleModalLabel">Delete chapter @ViewBag.Chapter.Name</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p style="color:red"> You will delete all questions inside this chapter!!!</p>
+                    <p style="color:red">
+                        Do you wish to continue?
+                    </p>
+                    <input type="hidden" name="chid" value="@ViewBag.Chapter.ChID" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!-- End Modal -->
+<!-- Modal Confirm Delete Question -->
+<div class="modal fade" id="confirmDeleteQuestionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h5" id="exampleModalLabel">Delete question</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p style="color:red"> You will delete all questions that you have selected!!!</p>
+                <p style="color:red">
+                    Do you wish to continue?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="deleteQuestion()" class="btn btn-primary">Yes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal -->
+<!-- Modal new Question -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title h5" id="exampleModalLabel">Create new question</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="h5">Choose type of question</p>
+                @foreach (var questionType in ViewBag.QuestionType)
+                {
+                    <div style="display:flex; margin-bottom:25px">
+                        @if (questionType.QTypeID == 1)
+                        {
+                            <a href="~/Teacher/Question/CreateMultipleChoiceQuestion?chid=@ViewBag.Chapter.ChID">@questionType.Name</a> }
+                        else if (questionType.QTypeID == 2)
+                        {
+                            <a href="~/Teacher/Question/CreateReadingQuestion?chid=@ViewBag.Chapter.ChID">@questionType.Name</a> }
+                        else if (questionType.QTypeID == 3)
+                        {
+                            <a href="~/Teacher/Question/CreateFillBlankQuestion?chid=@ViewBag.Chapter.ChID">@questionType.Name</a> }
+                        else if (questionType.QTypeID == 4)
+                        {
+                            <a href="~/Teacher/Question/CreateShortAnswerQuestion?chid=@ViewBag.Chapter.ChID">@questionType.Name</a> }
+                        else if (questionType.QTypeID == 5)
+                        {
+                            <a href="~/Teacher/Question/CreateMatchingQuestion?chid=@ViewBag.Chapter.ChID">@questionType.Name</a> }
+                        else if (questionType.QTypeID == 6)
+                        {
+                            <a href="~/Teacher/Question/CreateIndicateMistakeQuestion?chid=@ViewBag.Chapter.ChID">@questionType.Name</a>}
+                    </div>
+                }
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                @*<button type="button" class="btn btn-primary">Create Question</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal -->
+
+<div class="bg-gray-100 flex-1 p-6 md:mt-16 overflow-auto">
+    <!-- start navbar -->
+    <div style=" border-bottom: solid 0.5px;margin-bottom:10px">
+        <div class="flex mb-4">
+            <h1 class="h5 mg-top">@ViewBag.CourseName -> @ViewBag.Chapter.Name</h1>
+            <!-- Example single danger button -->
+            &nbsp;&nbsp;&nbsp;
+            <div class="dropdown">
+                <button type="button" data-bs-toggle="dropdown" id="dropdownMenuEdit"><i class="fas fa-pencil-alt "></i></button>
+
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuEdit">
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editChapterModal">Rename</a></li>
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#confirmDeleteChapterModal">Delete</a></li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="flex mb-4">
+            <button type="button" class="btn-indigo mg_btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                New question
+            </button>
+
+        </div>
+    </div>
+    @if (ViewBag.CountQuest == 0)
+    {
+
+        <p style="text-align: center; margin-top: 10%; font-size: larger;">There is no question in this chapter</p>
+    }
+    else
+    {
+        using (Html.BeginForm("ViewQuestionByChapter", "Question", FormMethod.Get))
+        {
+            <div class="block-search-dropdown">
+
+                <div class="search-size text-gray-700 ">
+                    <div class="flex">
+                        <input type="hidden" id="chapterId" name="chid" value="@ViewBag.Chapter.ChID" />
+                        <span class="h5 my-auto mr-2">Search: </span>
+                        <input class="search-box w-10/12 border border-black-400" type="text" placeholder="Search..." id="searchText" name="searchText" value="@ViewBag.Search">
+
+                        <button type="submit" class="search-box"> <i class="fad fa-search"></i> </button>
+                    </div>
+                </div>
+                <div class="btn-group mg-left w-3/12">
+                    <span class="h5 mr-1 my-auto text-gray-700">Question type: </span>
+                    <select onchange="this.form.submit()" id="qType" name="qtype" class="btn-indigo rounded btn">
+                        <option value="-1">All Type </option>
+                        @foreach (var questionType in ViewBag.QuestionType)
+                        {
+                            if (questionType.QTypeID.ToString().Equals(ViewBag.QType))
+                            {
+                                <option value="@questionType.QTypeID" selected>@questionType.Name </option>
+                            }
+                            else
+                            {
+                                <option value="@questionType.QTypeID">@questionType.Name </option>
+                            }
+
+                        }
+                    </select>
+                </div>
+            </div>
+        }
+        <div class="tb-mg-top">
+            @using (Html.BeginForm("DeleteQuestion", "Question", FormMethod.Post, new { id = "formDeleteQuestion" }))
+            {
+                <input type="hidden" id="chapterId" name="chapterId" value="@ViewBag.Chapter.ChID" />
+                <input type="hidden" name="searchText" value="@ViewBag.Search" />
+                <input type="hidden" name="page" value="@ViewBag.Page" />
+                <input type="hidden" name="qtype" value="@ViewBag.QType" />
+                <div id="divShowQuestions">
+                    @if (Model.Count() == 0)
+                    {
+                        <p style="text-align: center; margin-top: 10%; font-size: larger;">0 question found...</p> }
+                    else
+                    {
+                        <table class="table w-full">
+                            <thead>
+                                <tr>
+                                    <th class="" scope="col">No</th>
+                                    <td class="" scope="col"></td>
+                                    <th class="w-6/12" style="width: 47%;" scope="col">Question</th>
+                                    <th class="w-2/12" scope="col">Type</th>
+                                    <th class="w-2/12" scope="col">Mark</th>
+                                    <th class="w-4/12" style="min-width:180px" scope="col">Learning outcome</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var question in Model)
+                                {
+                                    ViewBag.QuestCount = ViewBag.QuestCount + 1;
+                                    <tr>
+                                        <th scope="row">@ViewBag.QuestCount</th>
+                                        @{
+                                            string qSet = "";
+                                            if (question.Qtype == 2)
+                                            {
+
+                                                qSet = question.PassageID + "-" + question.Qtype;
+                                            }
+                                            else
+                                            {
+
+                                                qSet = question.QID + "-" + question.Qtype;
+                                            } }
+                                        <td><input type="checkbox" name="questionIdAndType" class="form-check-input" id="cbQuestID" value="@qSet"></td>
+                                        <td class="w-6/12">
+                                            @if (question.Text != null && !question.Text.Equals(""))
+                                            {
+                                                <a href="~/Teacher/Question/EditQuestion?qid=@question.QID&&qtype=@question.Qtype" type="button" class=" text_overflow-3">@question.Text </a>
+                                            }
+                                            @if (question.ImageData != null)
+                                            {
+                                                var base64 = Convert.ToBase64String(question.ImageData);
+                                                var imgSrc = string.Format("data:image/png;base64,{0}", base64);
+                                                <a href="~/Teacher/Question/EditQuestion?qid=@question.QID&&qtype=@question.Qtype" type="button">
+                                                    <img src="@imgSrc" alt="pic" class="img-fix" />
+                                                </a>
+                                            }
+
+
+                                        </td>
+                                        <td class="w-2/12">
+                                            @if (question.Qtype == 5)
+                                            {
+                                                <span>Matching</span> }
+                                            else if (question.Qtype == 2)
+                                            {
+                                                <span>Reading</span>}
+                                            else
+                                            {
+                                                @question.QuestionType.Name}
+                                        </td>
+                                        <td class="w-2/12">@question.Mark</td>
+                                        @{
+                                            string loList = "";
+                                            foreach (var ql in ViewBag.LoList)
+                                            {
+                                                if (ql.QuestionID == question.QID && ql.Qtype == question.Qtype)
+                                                {
+                                                    string loName = "";
+                                                    if (ql.LearningOutcome.LO_Name.Length > 10)
+                                                    {
+                                                        loName = ql.LearningOutcome.LO_Name.Substring(0, 9) + "...";
+                                                    }
+                                                    else
+                                                    {
+                                                        loName = ql.LearningOutcome.LO_Name;
+                                                    }
+                                                    loList = loList + loName + ", ";
+                                                }
+                                            }
+                                            if (loList != "")
+                                            {
+                                                loList = loList.Substring(0, loList.Length - 2);
+                                            }
+                                        }
+
+                                        <td class="w-4/12" style="min-width:180px">@loList </td>
+                                    </tr>
+                                }
+
+
+                            </tbody>
+                        </table>
+
+                        <div class="paging">
+                            @Html.PagedListPager(Model, i => Url.Action("ViewQuestionByChapter", "Question",
+                                            new { i, chid = ViewBag.Chapter.ChID, searchText = Request.QueryString["searchText"], qtype = Request.QueryString["qType"] }))
+                        </div>
+                        <div class="flex flex-col justify-center">
+
+                            <button type="button" id="deleteQuestionButton" class="btn btn-indigo w-48" data-bs-toggle="modal" data-bs-target="#confirmDeleteQuestionModal">Delete question</button>
+
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+<!-- End General Report -->
+
+<script src="~/Scripts/validate2.js"></script>

@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewBag.Title = "DoPoll";
+    Layout = "~/Areas/Student/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="bg-gray-100 flex-1 p-6 pt-32">
+
+    <div class="grid grid-cols-1 w-full bg-gray p-6  ">
+        <!-- Start Form Poll-->
+        @using (Html.BeginForm("SubmitPoll", "Poll", FormMethod.Post, new { id = "formSubmitPoll" }))
+        {
+            <input type="hidden" name="poid" value="@ViewBag.Poll.PollID" />
+            <div class="w-full items-center bg-gray mx-auto my-3">
+                <div class="text-center">
+                    <h1 class="h3">
+                        <span>@ViewBag.Poll.PollName</span>
+                    </h1>
+                </div>
+            </div>
+            <div class="w-full bg-gray p-6 items-center inline-flex justify-center">
+                @if (ViewBag.CountDown != null)
+                {
+                    <i style="color:burlywood" class="h2 far fa-clock  px-2"></i>
+                    <span class="h2 px-2" style="color:darkred" id="time" name="create-question-time" data-time="@ViewBag.CountDown" placeholder="Time">00:00</span>
+                }
+
+            </div>
+
+            <!--Form Poll-->
+            <div class="border border-black-400 p-3 ">
+
+                <div class=" items-center bg-gray p-6">
+                    <div class="w-full items-center bg-gray px-6 pt-6">
+                        <span class="question-num">
+                            Question:
+                        </span>
+                    </div>
+
+                    <div class="w-full items-center bg-gray ">
+                        <div contenteditable="false" class="w-full bg-gray px-6 pt-2 pb-6 font-sans">
+                            <span>  @ViewBag.Poll.Question</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full items-center bg-gray p-6">
+                    @if (ViewBag.Poll.Polltype.Equals("MultipleAnswer"))
+                    {
+                        <p class="px-6">
+                            (Choose 1 or more answer)
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="px-6">
+                            (Choose 1 answer)
+                        </p>
+                    }
+                    <table class="w-full border-spacing-2">
+                        @foreach (var pollChoice in ViewBag.Poll.Poll_Answer)
+                        {
+                            <tr>
+                                <td class="w-2">
+                                    @if (ViewBag.Poll.Polltype.Equals("MultipleAnswer"))
+                                    {
+                                        <input type="checkbox" name="option" value="@pollChoice.PAID"><span>@*@pollChoice.PAID*@</span>
+                                    }
+                                    else
+                                    {
+                                        <input type="radio" class="mode-rdb2" name="option" value="@pollChoice.PAID"><span>@*@pollChoice.PAID*@</span>
+                                    }
+
+                                </td>
+                                <td>
+                                    <input type="text" style="width:95%" class="w-full pl-3 bg-gray-100" name="multipleOption" value="@pollChoice.Answer_Text" readonly>
+                                </td>
+                            </tr>
+
+                        }
+                    </table>
+                </div>
+            </div>
+            <div class=" flex flex-col justify-center mt-10">
+                <input type="submit" class="btn btn-bs-primary mt-2  start-test mx-auto" value="Submit Answer" />
+            </div>
+
+        }
+        <!-- End Form Poll-->
+
+    </div>
+
+
+</div>
+
+
+@*<script src="~/Scripts/jquery-3.4.1.min.js"></script>*@
+<script src="~/Scripts/student.poll.countdown.js"></script>
+
+
+
+

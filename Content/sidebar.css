@@ -1,0 +1,25 @@
+﻿.grid-container {
+    display: grid;
+}
+
+.grid-item {
+    padding: 2px;
+    font-size: 30px;
+    text-align: center;
+}
+
+.fill-input {
+    border: 1px solid black;
+    margin-bottom:2px;
+}
+
+.question-num {
+    font-weight: bold;
+    font-size: 18px;
+    text-decoration: underline;
+}
+
+.question-num-3 {
+    font-weight: bold;
+    font-size: 18px;
+}

@@ -1,0 +1,48 @@
+﻿.lo-header {
+    height: 90px;
+    border-bottom: solid 0.5px;
+    margin-bottom: 10px;
+}
+.lo-title-header {
+    display: flex;
+    height: 30px;
+}
+
+.tb-lo-size{
+    width:5%
+}
+.block-btn{
+    display:flex;
+}
+.width-input-lo-detail {
+    
+}
+.txt-modal-newLO {
+    height: 35px;
+    border-radius: 9.1px;
+    background-color: white;
+    margin-bottom: 20px;
+    border: 0.2px solid black;
+}
+.colo-txt-input {
+    background-color: #f7fafc;
+    border-radius:5.0px
+}
+.area-lo-detail {
+    height: 100px;
+}
+.color-txt-confirm{
+    color:red;
+}
+.lo-label {
+    font-weight:bold; 
+    font-size:large ;
+    margin-bottom:10px;
+}
+
+.lo-label-2 {
+    font-weight:bold; 
+    font-size:large ;
+    margin-bottom:10px;
+    margin-top:10px;
+}
